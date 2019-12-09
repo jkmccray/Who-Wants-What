@@ -131,6 +131,16 @@ namespace WhoWantsWhat.Data
                 {
                     ListTypeId = 2,
                     Label = "Birthday"
+                },
+                new ListType()
+                {
+                    ListTypeId = 3,
+                    Label = "Anniversary"
+                },
+                new ListType()
+                {
+                    ListTypeId = 4,
+                    Label = "Other"
                 }
             );
 

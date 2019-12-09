@@ -11,10 +11,7 @@ namespace WhoWantsWhat.Models
         [Required]
         public int ListTypeId { get; set; }
         [Required]
-        public string UserId { get; set; }
-        [Required]
         public string Label { get; set; }
-        public ApplicationUser User { get; set; }
         public ICollection<GiftList> GiftLists { get; set; }
     }
 }
