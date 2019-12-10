@@ -12,12 +12,20 @@
         <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
     </form>
     <p>
-        <a class="btn btn-primary" asp-action="Create">Create New</a>
+        <a class="btn btn-primary mt-3" asp-action="Create">Create New</a>
     </p>
 </div>
-<div class="group-list">
-    @foreach(var g in Model)
+<div class="row group-list">
+    @foreach (var g in Model)
     {
-        <div class="group-card col-sm-4">@g.Name</div>
+        <div class="group-card">@*  *@
+            <h4>@Html.ActionLink(g.Name.ToString(), "Details", new { id = g.GroupId })</h4>
+            <ul>
+                @foreach (var u in g.GroupUsers)
+                {
+                    <li>@u.User.FirstName @u.User.LastName</li>
+                }
+            </ul>
+        </div>
     }
 </div>

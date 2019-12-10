@@ -1,0 +1,50 @@
+﻿@model WhoWantsWhat.Models.ViewModels.GroupsViewModels.AddToPeopleToGroupViewModel
+
+@{
+    ViewData["Title"] = "AddPeopleToGroup";
+}
+
+<h1>AddPeopleToGroup</h1>
+
+<form asp-action="SearchForPeople" class="form-inline my-2 my-lg-0">
+    <input asp-for="SearchText" class="form-control mr-sm-2" type="text" placeholder="Search for people to add to this group">
+    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @*@foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Joined)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Group.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.Id)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.GroupUserId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.GroupUserId">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.GroupUserId">Delete</a>
+                        </td>
+                    </tr>
+            }*@
+    </tbody>
+</table>

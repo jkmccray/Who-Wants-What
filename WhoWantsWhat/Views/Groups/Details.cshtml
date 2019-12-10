@@ -10,13 +10,17 @@
     <h4>Group Members</h4>
     <hr />
     <ul>
-        @foreach(var u in Model.GroupUsers)
+        @foreach (var u in Model.GroupUsers)
         {
             <li>@u.User.FirstName @u.User.LastName</li>
         }
     </ul>
 </div>
+<a class="btn btn-primary" asp-action="AddPeopleToGroup">Add People to Group</a>
+<form asp-action="LeaveGroup" asp-controller="Groups">
+    <input type="hidden" asp-for="GroupId" />
+    <input type="submit" value="Leave Group" class="btn btn-primary" />
+</form>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.GroupId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Groups</a>
 </div>

@@ -30,7 +30,7 @@ font-family: 'Nixie One', cursive;*/
     --white: #fff;
     --gray: #919aa1;
     --gray-dark: #343a40;
-    --primary: #1a1a1a;
+    --primary: #285157;
     --secondary: #fff;
     --success: #4BBF73;
     --info: #1F9BCF;
@@ -2770,16 +2770,16 @@ fieldset:disabled a.btn {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1a1a1a;
-  border-color: #1a1a1a;
+    color: #fff;
+    background-color: #285157;
+    border-color: #285157;
 }
 
-.btn-primary:hover {
-  color: #fff;
-  background-color: #070707;
-  border-color: #010000;
-}
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #285157;
+        border-color: #010000;
+    }
 
 .btn-primary:focus, .btn-primary.focus {
   color: #fff;
