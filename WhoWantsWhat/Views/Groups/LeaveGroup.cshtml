@@ -1,0 +1,17 @@
+﻿@model WhoWantsWhat.Models.GroupUser
+
+@{
+    ViewData["Title"] = "LeaveGroup";
+}
+
+<h1>@Model.Group.Name</h1>
+
+<h3>Are you sure you want to leave this group?</h3>
+<div>
+    
+    <form asp-action="LeaveGroupConfirmed">
+        <input type="hidden" asp-for="GroupId" />
+        <input type="submit" value="Yes" class="btn btn-primary" /> 
+        <a class="btn btn-primary" asp-action="Index">No</a>
+    </form>
+</div>

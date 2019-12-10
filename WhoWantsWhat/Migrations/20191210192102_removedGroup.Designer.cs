@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WhoWantsWhat.Data;
 
 namespace WhoWantsWhat.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191210192102_removedGroup")]
+    partial class removedGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,7 +254,7 @@ namespace WhoWantsWhat.Migrations
                             AccessFailedCount = 0,
                             Birthday = new DateTime(2001, 5, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             City = "Nashville",
-                            ConcurrencyStamp = "01f5dde3-868b-483b-8903-94427286f0f7",
+                            ConcurrencyStamp = "d2103d41-cddb-412b-9467-6db7b077ffc6",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -260,7 +262,7 @@ namespace WhoWantsWhat.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEL600n8CLKNK7gxird6h2nGvNQAJQOOWsAfNLEJaHH1ZyWDAKBG2KTsN0u8i+AJ0VA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMvqO5y0ZB1iB/zSIpwiLyf+5JvNeYdlLjK+CnU2L9NBeDdAn7IHVfKbuE473DKEGg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             State = "TN",
@@ -275,7 +277,7 @@ namespace WhoWantsWhat.Migrations
                             AccessFailedCount = 0,
                             Birthday = new DateTime(1986, 6, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             City = "Nashville",
-                            ConcurrencyStamp = "dff2fe59-bda4-46b9-9938-b277dd99f3d7",
+                            ConcurrencyStamp = "bba5d015-7cea-4630-885b-76892793658d",
                             Email = "tom@cat.com",
                             EmailConfirmed = true,
                             FirstName = "Tom",
@@ -283,7 +285,7 @@ namespace WhoWantsWhat.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TOM@CAT.COM",
                             NormalizedUserName = "TOM@CAT.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMeOX9p+bvN8+3WwhXmiNEMw0LYD/+Wc7NVozlSSHG7ux5f1Bo9HH4qMjSbyVnI0CQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHEhy8NSw9CNsK6KTBtujNFvMeUN6cRJoUE6/At7s9xPOjtUp1vIsK3i/vPkZP3C2w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794578",
                             State = "TN",

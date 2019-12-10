@@ -1,0 +1,14 @@
+﻿@model WhoWantsWhat.Models.ViewModels.GroupsViewModels.AddToPeopleToGroupViewModel
+
+@{
+    ViewData["Title"] = "AddPeopleToGroup";
+}
+
+<h1>Search for People to Add to @Model.Group.Name</h1>
+
+<form asp-action="SearchForPeople" class="form-inline my-2 my-lg-0">
+    <input type="hidden" asp-for="GroupId" />
+    <input asp-for="SearchText" class="form-control mr-sm-2" type="text" placeholder="Search for people to add">
+    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+</form>
+

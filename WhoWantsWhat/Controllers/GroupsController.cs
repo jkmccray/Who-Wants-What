@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WhoWantsWhat.Data;
 using WhoWantsWhat.Models;
+using WhoWantsWhat.Models.ViewModels.GroupsViewModels;
 
 namespace WhoWantsWhat.Controllers
 {
+    [Authorize]
     public class GroupsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,12 +28,35 @@ namespace WhoWantsWhat.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Groups
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string GroupSearchText)
         {
             var user = await GetCurrentUserAsync();
-            return View(await _context.Groups
-                .Where(g => g.GroupUsers.Any(gu => gu.User == user))
-                .ToListAsync());
+            if (GroupSearchText == null)
+            {
+                var viewModel = new MyGroupsAndSearchViewModel
+                {
+                    Groups = await _context.Groups
+                    .Include(g => g.GroupUsers)
+                    .ThenInclude(gu => gu.User)
+                    .Where(g => g.GroupUsers.Any(gu => gu.User == user && gu.Joined))
+                    .ToListAsync()
+                };
+                return View(viewModel);
+            }
+            else
+            {
+                var viewModel = new MyGroupsAndSearchViewModel
+                {
+                    GroupSearchText = GroupSearchText,
+                    Groups = await _context.Groups
+                    .Include(g => g.GroupUsers)
+                    .ThenInclude(gu => gu.User)
+                    .Where(g => !g.GroupUsers.Any(gu => gu.User == user))
+                    .Where(g => g.Name.Contains(GroupSearchText))
+                    .ToListAsync()
+                };
+                return View(viewModel);
+            }
         }
 
         // GET: Groups/Details/5
@@ -40,16 +67,16 @@ namespace WhoWantsWhat.Controllers
                 return NotFound();
             }
 
-            var group = await _context.Groups
+            var @group = await _context.Groups
                 .Include(g => g.GroupUsers)
                 .ThenInclude(gu => gu.User)
                 .FirstOrDefaultAsync(m => m.GroupId == id);
-            if (group == null)
+            if (@group == null)
             {
                 return NotFound();
             }
 
-            return View(group);
+            return View(@group);
         }
 
         // GET: Groups/Create
@@ -69,57 +96,17 @@ namespace WhoWantsWhat.Controllers
             {
                 _context.Add(@group);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(@group);
-        }
 
-        // GET: Groups/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var @group = await _context.Groups.FindAsync(id);
-            if (@group == null)
-            {
-                return NotFound();
-            }
-            return View(@group);
-        }
-
-        // POST: Groups/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GroupId,Name")] Group @group)
-        {
-            if (id != @group.GroupId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                var groupId = @group.GroupId;
+                var user = await GetCurrentUserAsync();
+                _context.Add(new GroupUser
                 {
-                    _context.Update(@group);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GroupExists(@group.GroupId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                    GroupId = groupId,
+                    UserId = user.Id,
+                    Joined = true
+                });
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(@group);
@@ -152,6 +139,129 @@ namespace WhoWantsWhat.Controllers
             _context.Groups.Remove(@group);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Leave group
+        public async Task<IActionResult> LeaveGroup(int? GroupId)
+        {
+            if (GroupId == null)
+            {
+                return NotFound();
+            }
+
+            var groupUser = await _context.GroupUsers
+                .Include(gu => gu.Group)
+                .FirstOrDefaultAsync(gu => gu.GroupId == GroupId);
+            if (groupUser == null)
+            {
+                return NotFound();
+            }
+
+            return View(groupUser);
+        }
+
+        // POST: Leave group confirmed
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LeaveGroupConfirmed(int GroupId)
+        {
+            var user = await GetCurrentUserAsync();
+            var groupUser = await _context.GroupUsers.FirstOrDefaultAsync(gu => gu.GroupId == GroupId && gu.User == user);
+            _context.GroupUsers.Remove(groupUser);
+            await _context.SaveChangesAsync();
+
+            // Check if group now has no users where Joined = true. If it does not have any, delete the group
+            var inactiveGroup = await _context.Groups.Include(g => g.GroupUsers).FirstOrDefaultAsync(g => g.GroupId == GroupId);
+            if (inactiveGroup.GroupUsers.Where(gu => gu.Joined).Count() == 0)
+            {
+                // Account for users that have requested to join but have not been added. Need to delete these entries in GroupUsers from the db
+                var usersNotAddedToGroup = inactiveGroup.GroupUsers.Where(gu => !gu.Joined);
+                _context.GroupUsers.RemoveRange(usersNotAddedToGroup);
+                await _context.SaveChangesAsync();
+
+                // Then remove the inactive group
+                _context.Groups.Remove(inactiveGroup);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> AddPeopleToGroup(int GroupId)
+        {
+            var viewModel = new AddToPeopleToGroupViewModel
+            {
+                Group = await _context.Groups
+                    .FirstOrDefaultAsync(g => g.GroupId == GroupId)
+            };
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> SearchForPeople(AddToPeopleToGroupViewModel viewModel)
+        {
+            var searchText = viewModel.SearchText;
+            viewModel.Group = await _context.Groups
+                    .Include(g => g.GroupUsers)
+                    .FirstOrDefaultAsync(g => g.GroupId == viewModel.GroupId);
+            viewModel.CurrentUser = await GetCurrentUserAsync();
+            viewModel.Users = await _context.ApplicationUsers
+                .Where(u => !u.GroupUsers.Any(gu => gu.GroupId == viewModel.GroupId))
+                .Where(u => u.FirstName.Contains(searchText) || u.LastName.Contains(searchText))
+                .ToListAsync();
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> AddUserToGroup(IFormCollection form)
+        {
+            var groupId = int.Parse(Request.Form["GroupId"]);
+            var userId = Request.Form["UserId"][0];
+            var existingGroupUser = await _context.GroupUsers.FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId && !gu.Joined);
+            if (existingGroupUser == null)
+            {
+                var groupUser = new GroupUser
+                {
+                    GroupId = groupId,
+                    UserId = userId,
+                    Joined = true
+                };
+                _context.GroupUsers.Add(groupUser);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                existingGroupUser.Joined = true;
+                _context.GroupUsers.Update(existingGroupUser);
+                await _context.SaveChangesAsync();
+
+            }
+
+            return RedirectToAction(nameof(Details), new { id = groupId });
+        }
+
+        public async Task<IActionResult> RequestToJoinGroup(IFormCollection form)
+        {
+            var user = await GetCurrentUserAsync();
+            var groupUser = new GroupUser
+            {
+                GroupId = int.Parse(Request.Form["g.GroupId"]),
+                UserId = user.Id,
+                Joined = false
+            };
+            _context.GroupUsers.Add(groupUser);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeclineRequestToJoinGroup(IFormCollection form)
+        {
+            var groupId = int.Parse(Request.Form["GroupId"]);
+            var userId = Request.Form["UserId"][0];
+            var existingGroupUser = await _context.GroupUsers.FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId && !gu.Joined);
+            _context.GroupUsers.Remove(existingGroupUser);
+            await _context.SaveChangesAsync();
+       
+            return RedirectToAction(nameof(Details), new { id = groupId });
         }
 
         private bool GroupExists(int id)

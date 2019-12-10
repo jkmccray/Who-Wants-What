@@ -96,11 +96,6 @@ namespace WhoWantsWhat.Data
                 {
                     GroupId = 1,
                     Name = "McCray Family"
-                },
-                new Group()
-                {
-                    GroupId = 2,
-                    Name = "Nashville Friends"
                 }
             );
 

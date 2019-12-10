@@ -26,10 +26,28 @@
     justify-content: space-between;
 }
 
+.group-list {
+    display: grid;
+    grid-template-columns: repeat(3, 32% [col-start]);
+    justify-content: space-between;
+    margin: 1em 0;
+}
+
+.group-list:first-child {
+
+}
+
 .group-card {
     background-color: #CDABAA;
     height: 30em;
+    padding: 2em;
+    margin-bottom: 1em;
 }
+
+.group-card.first {
+    margin-left: 0;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
