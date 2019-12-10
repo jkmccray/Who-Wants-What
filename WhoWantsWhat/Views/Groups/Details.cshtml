@@ -45,6 +45,11 @@
                 <input name="UserId" type="hidden" value="@gu.UserId" />
                 <input type="submit" value="Add" class="btn btn-outline-primary" />
             </form>
+            <form asp-action="DeclineRequestToJoinGroup" asp-controller="Groups">
+                <input label="GroupId" type="hidden" asp-for="GroupId" />
+                <input name="UserId" type="hidden" value="@gu.UserId" />
+                <input type="submit" value="Decline Request" class="btn btn-outline-primary" />
+            </form>
         </li>
         }
     </ul>

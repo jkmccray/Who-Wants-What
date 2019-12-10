@@ -253,6 +253,17 @@ namespace WhoWantsWhat.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> DeclineRequestToJoinGroup(IFormCollection form)
+        {
+            var groupId = int.Parse(Request.Form["GroupId"]);
+            var userId = Request.Form["UserId"][0];
+            var existingGroupUser = await _context.GroupUsers.FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId && !gu.Joined);
+            _context.GroupUsers.Remove(existingGroupUser);
+            await _context.SaveChangesAsync();
+       
+            return RedirectToAction(nameof(Details), new { id = groupId });
+        }
+
         private bool GroupExists(int id)
         {
             return _context.Groups.Any(e => e.GroupId == id);
