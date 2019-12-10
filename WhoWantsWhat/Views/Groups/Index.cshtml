@@ -1,0 +1,23 @@
+﻿@model IEnumerable<WhoWantsWhat.Models.Group>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>My Groups</h1>
+
+<div class="search-box-and-create-button">
+    <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search for groups to join">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Create New</a>
+    </p>
+</div>
+<div class="group-list">
+    @foreach(var g in Model)
+    {
+        <div class="group-card col-sm-4">@g.Name</div>
+    }
+</div>

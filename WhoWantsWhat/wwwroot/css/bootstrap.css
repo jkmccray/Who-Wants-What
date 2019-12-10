@@ -2734,7 +2734,7 @@ textarea.form-control {
   border: 0px solid transparent;
   padding: 0.75rem 1.5rem;
   font-size: 0.875rem;
-  line-height: 1.5rem;
+  /*line-height: 1.5rem;*/
   border-radius: 0;
   -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -4526,7 +4526,7 @@ input[type="button"].btn-block {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  padding: 1.5rem 1rem;
+  padding: 1rem 1rem;
 }
 
 .navbar .container,
