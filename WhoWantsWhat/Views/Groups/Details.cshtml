@@ -1,4 +1,9 @@
-﻿@model WhoWantsWhat.Models.Group
+﻿@using Microsoft.AspNetCore.Identity
+
+@model WhoWantsWhat.Models.Group
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
@@ -7,23 +12,44 @@
 <h1>@Model.Name Group</h1>
 
 <div>
-    <h4>Group Members</h4>
-    <hr />
+    <h4>Group Members:</h4>
     <ul>
-        @foreach (var u in Model.GroupUsers)
+        @foreach (var u in Model.GroupUsers.Where(gu => gu.Joined))
         {
             <li>@u.User.FirstName @u.User.LastName</li>
         }
     </ul>
 </div>
-<form asp-action="AddPeopleToGroup" asp-controller="Groups">
-    <input type="hidden" asp-for="GroupId" />
-    <input type="submit" value="Add People to Group" class="btn btn-primary" />
-</form>
-<form asp-action="LeaveGroup" asp-controller="Groups">
-    <input type="hidden" asp-for="GroupId" />
-    <input type="submit" value="Leave Group" class="btn btn-primary" />
-</form>
-<div>
+@if (Model.GroupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User)))
+{
+    <form asp-action="AddPeopleToGroup" asp-controller="Groups">
+        <input type="hidden" asp-for="GroupId" />
+        <input type="submit" value="Add People to Group" class="btn btn-primary" />
+    </form>
+    <form asp-action="LeaveGroup" asp-controller="Groups">
+        <input type="hidden" asp-for="GroupId" />
+        <input type="submit" value="Leave Group" class="btn btn-primary mt-2" />
+    </form>
+}
+
+@if (Model.GroupUsers.Where(gu => !gu.Joined).Count() > 0)
+{
+    <h4 class="mt-3">Requests:</h4>
+    <ul>
+        @foreach (var gu in Model.GroupUsers.Where(gu => !gu.Joined))
+        {
+        <li>
+            <form asp-action="AddUserToGroup" asp-controller="Groups">
+                <label>@gu.User.FirstName @gu.User.LastName wants to join your group</label>
+                <input label="GroupId" type="hidden" asp-for="GroupId" />
+                <input name="UserId" type="hidden" value="@gu.UserId" />
+                <input type="submit" value="Add" class="btn btn-outline-primary" />
+            </form>
+        </li>
+        }
+    </ul>
+}
+
+<div class="mt-3">
     <a asp-action="Index">Back to Groups</a>
 </div>

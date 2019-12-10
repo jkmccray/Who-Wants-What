@@ -1,31 +1,51 @@
-﻿@model IEnumerable<WhoWantsWhat.Models.Group>
+﻿@using Microsoft.AspNetCore.Identity
+
+@model WhoWantsWhat.Models.ViewModels.GroupsViewModels.MyGroupsAndSearchViewModel
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>My Groups</h1>
+<h1>Groups</h1>
 
 <div class="search-box-and-create-button">
-    <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search for groups to join">
+    <form asp-action="Index" class="form-inline my-2 my-lg-0">
+        <input asp-for="GroupSearchText" class="form-control mr-sm-2" type="text" placeholder="Search for groups to join">
         <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
     </form>
     <p>
-        <a class="btn btn-primary mt-3" asp-action="Create">Create New</a>
+        <a class="btn btn-primary mt-3" asp-action="Create">Create New Group</a>
     </p>
 </div>
+@if (Model.GroupSearchText != null && Model.Groups.Count == 0)
+{
+    <p>No groups found. Please try another search.</p>
+}
 <div class="row group-list">
-    @foreach (var g in Model)
+    @foreach (var g in Model.Groups)
     {
-        <div class="group-card">@*  *@
-            <h4>@Html.ActionLink(g.Name.ToString(), "Details", new { id = g.GroupId })</h4>
-            <ul>
-                @foreach (var u in g.GroupUsers)
-                {
-                    <li>@u.User.FirstName @u.User.LastName</li>
-                }
-            </ul>
-        </div>
+    <div class="group-card">
+        <h4>@Html.ActionLink(g.Name.ToString(), "Details", new { id = g.GroupId })</h4>
+        <ul>
+            @foreach (var u in g.GroupUsers.Where(gu => gu.Joined))
+            {
+                <li>@u.User.FirstName @u.User.LastName</li>
+            }
+        </ul>
+        @if (!g.GroupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User)))
+        {
+            <form asp-action="RequestToJoinGroup" asp-controller="Groups">
+                <input label="GroupId" type="hidden" asp-for="@g.GroupId" />
+                <input type="submit" value="Request to Join" class="btn btn-secondary" />
+            </form>
+        }
+        else if (!g.GroupUsers.FirstOrDefault(gu => gu.UserId == UserManager.GetUserId(User)).Joined)
+        {
+            <button disabled class="btn btn-secondary" >Requested to Join</button>
+        }
+    </div>
     }
 </div>
