@@ -1,0 +1,22 @@
+﻿@model WhoWantsWhat.Models.Group
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Name Group</h1>
+
+<div>
+    <h4>Group Members</h4>
+    <hr />
+    <ul>
+        @foreach(var u in Model.GroupUsers)
+        {
+            <li>@u.User.FirstName @u.User.LastName</li>
+        }
+    </ul>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.GroupId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
