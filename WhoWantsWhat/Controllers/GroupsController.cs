@@ -169,9 +169,16 @@ namespace WhoWantsWhat.Controllers
             _context.GroupUsers.Remove(groupUser);
             await _context.SaveChangesAsync();
 
+            // Check if group now has no users where Joined = true. If it does not have any, delete the group
             var inactiveGroup = await _context.Groups.Include(g => g.GroupUsers).FirstOrDefaultAsync(g => g.GroupId == GroupId);
-            if (inactiveGroup.GroupUsers.Count == 0)
+            if (inactiveGroup.GroupUsers.Where(gu => gu.Joined).Count() == 0)
             {
+                // Account for users that have requested to join but have not been added. Need to delete these entries in GroupUsers from the db
+                var usersNotAddedToGroup = inactiveGroup.GroupUsers.Where(gu => !gu.Joined);
+                _context.GroupUsers.RemoveRange(usersNotAddedToGroup);
+                await _context.SaveChangesAsync();
+
+                // Then remove the inactive group
                 _context.Groups.Remove(inactiveGroup);
                 await _context.SaveChangesAsync();
             }
