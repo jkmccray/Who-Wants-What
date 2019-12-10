@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using WhoWantsWhat.Models.ViewModels.GroupsViewModels;
 
 namespace WhoWantsWhat.Controllers
 {
+    [Authorize]
     public class GroupsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -160,19 +162,26 @@ namespace WhoWantsWhat.Controllers
             var viewModel = new AddToPeopleToGroupViewModel
             {
                 Group = await _context.Groups
-                    .Include(g => g.GroupUsers)
-                    .FirstOrDefaultAsync(g => g.GroupId == GroupId),
-                CurrentUser = await GetCurrentUserAsync()
+                    .FirstOrDefaultAsync(g => g.GroupId == GroupId)
             };
 
             return View(viewModel);
         }
 
-        //[HttpPost, ActionName("AddPeopleToGroup")]
-        //public async Task<IActionResult> SearchForPeople(AddToPeopleToGroupViewModel viewModel)
-        //{
+        public async Task<IActionResult> SearchForPeople(AddToPeopleToGroupViewModel viewModel)
+        {
+            var searchText = viewModel.SearchText;
+            viewModel.Group = await _context.Groups
+                    .Include(g => g.GroupUsers)
+                    .FirstOrDefaultAsync(g => g.GroupId == viewModel.GroupId);
+            viewModel.CurrentUser = await GetCurrentUserAsync();
+            viewModel.Users = await _context.ApplicationUsers
+                .Where(u => u.Groups)
+                .Where(u => u.FirstName.Contains(searchText) || u.LastName.Contains(searchText))
+                .ToListAsync();
 
-        //}
+            return View(viewModel);
+        }
 
         private bool GroupExists(int id)
         {

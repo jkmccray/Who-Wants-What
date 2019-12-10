@@ -28,6 +28,6 @@ namespace WhoWantsWhat.Models
         [Required]
         [Display(Name = "Zip Code")]
         public string ZipCode { get; set; }
-        public ICollection<Group> Groups { get; set; }
+        public ICollection<GroupUser> GroupUsers { get; set; }
     }
 }

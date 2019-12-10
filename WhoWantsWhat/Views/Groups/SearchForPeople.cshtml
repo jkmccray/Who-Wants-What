@@ -1,0 +1,54 @@
+﻿@model WhoWantsWhat.Models.ViewModels.GroupsViewModels.AddToPeopleToGroupViewModel
+
+@{
+    ViewData["Title"] = "SearchForPeople";
+}
+
+<h1>Search for People to Add to @Model.Group.Name</h1>
+
+<form asp-action="SearchForPeople" class="form-inline my-2 my-lg-0">
+    <input type="hidden" asp-for="GroupId" />
+    <input asp-for="SearchText" class="form-control mr-sm-2" type="text" placeholder="Search for people to add">
+    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+@if (Model.Users != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Users[0].FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Users[0].LastName)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => user.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => user.LastName)
+                    </td>
+                    <td>
+                        <form asp-action="AddUserToGroup" asp-controller="Groups">
+                            <input type="hidden" asp-for="GroupId" />
+                            <input type="hidden" asp-for="@user.Id" />
+                            <input type="submit" value="Add to @Model.Group.Name Group" class="btn btn-primary" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No users found. Please try again.</p>
+}
