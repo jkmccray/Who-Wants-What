@@ -13,5 +13,6 @@ namespace WhoWantsWhat.Models.ViewModels.GroupsViewModels
         public ApplicationUser CurrentUser { get; set; }
         public string SearchText { get; set; }
         public List<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+        public int SelectedUserId { get; set; }
     }
 }

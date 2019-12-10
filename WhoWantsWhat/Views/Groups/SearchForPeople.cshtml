@@ -38,8 +38,8 @@
                     </td>
                     <td>
                         <form asp-action="AddUserToGroup" asp-controller="Groups">
-                            <input type="hidden" asp-for="GroupId" />
-                            <input type="hidden" asp-for="@user.Id" />
+                            <input label="GroupId" type="hidden" asp-for="GroupId" />
+                            <input name="UserId" type="hidden" value="@user.Id" />
                             <input type="submit" value="Add to @Model.Group.Name Group" class="btn btn-primary" />
                         </form>
                     </td>

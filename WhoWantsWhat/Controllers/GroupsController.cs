@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -176,11 +177,26 @@ namespace WhoWantsWhat.Controllers
                     .FirstOrDefaultAsync(g => g.GroupId == viewModel.GroupId);
             viewModel.CurrentUser = await GetCurrentUserAsync();
             viewModel.Users = await _context.ApplicationUsers
-                .Where(u => u.Groups)
+                .Where(u => !u.GroupUsers.Any(gu => gu.GroupId == viewModel.GroupId))
                 .Where(u => u.FirstName.Contains(searchText) || u.LastName.Contains(searchText))
                 .ToListAsync();
 
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> AddUserToGroup(IFormCollection form)
+        {
+            var groupId = int.Parse(Request.Form["GroupId"]);
+            var groupUser = new GroupUser
+            {
+                GroupId = groupId,
+                UserId = Request.Form["UserId"],
+                Joined = true
+            };
+            _context.GroupUsers.Add(groupUser);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = groupId });
         }
 
         private bool GroupExists(int id)
