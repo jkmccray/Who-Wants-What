@@ -73,6 +73,7 @@ namespace WhoWantsWhat.Controllers
                 .Include(g => g.GroupUsers)
                 .ThenInclude(gu => gu.User)
                 .FirstOrDefaultAsync(m => m.GroupId == id);
+            @group.GroupUsers = @group.GroupUsers.OrderBy(gu => gu.User.LastName).ToList();
             if (@group == null)
             {
                 return NotFound();
