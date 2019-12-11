@@ -1,0 +1,64 @@
+﻿@model WhoWantsWhat.Models.ViewModels.ItemsViewModels.CreateItemViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+@{ 
+    var listName = "";
+    if (Model.WishListId != null)
+    {
+        listName = Model.WishList.Name;
+    }
+    if (Model.GiftListId != null)
+    {
+        listName = Model.GiftList.Name;
+    }
+    <h1>Create Item for @listName</h1>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Item.Name" class="control-label"></label>
+                <input asp-for="Item.Name" class="form-control" />
+                <span asp-validation-for="Item.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.Link" class="control-label"></label>
+                <input asp-for="Item.Link" class="form-control" />
+                <span asp-validation-for="Item.Link" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+        <label asp-for="Item.PurchasedAmount" class="control-label"></label>
+        <input asp-for="Item.PurchasedAmount" class="form-control" />
+        <span asp-validation-for="Item.PurchasedAmount" class="text-danger"></span>
+        </div>*@
+            @if (Model.WishListId != null)
+            {
+                // Input for wish list notes
+                <div class="form-group">
+                    <label asp-for="WishListItem.Notes" class="control-label"></label>
+                    <input asp-for="WishListItem.Notes" class="form-control" />
+                </div>
+            }
+            <div class="form-group form-check custom-control custom-checkbox">
+                <label class="form-check-label custom-control-label">
+                    <input class="form-check-input custom-control-input" asp-for="Item.Purchased" /> @Html.DisplayNameFor(model => model.Item.Purchased)
+                </label>
+            </div>
+            <input type="hidden" asp-for="WishListId" />
+            <input type="hidden" asp-for="GiftListId" />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

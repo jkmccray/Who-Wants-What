@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using WhoWantsWhat.Models;
 
 namespace WhoWantsWhat.Controllers
 {
+    [Authorize]
     public class WishListsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,14 +29,13 @@ namespace WhoWantsWhat.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await GetCurrentUserAsync();
-            var applicationDbContext = await _context.WishLists
-                .Include(w => w.User)
+            var wishLists = await _context.WishLists
                 .Include(w => w.WishListItems)
                 .ThenInclude(wi => wi.Item)
                 .Where(w => w.User == user)
                 .ToListAsync();
 
-            return View();
+            return View(wishLists);
         }
 
         // GET: WishLists/Details/5
@@ -59,7 +60,6 @@ namespace WhoWantsWhat.Controllers
         // GET: WishLists/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
 
@@ -68,15 +68,17 @@ namespace WhoWantsWhat.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("WishListId,Name,UserId")] WishList wishList)
+        public async Task<IActionResult> Create(WishList wishList)
         {
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
+                var user = await GetCurrentUserAsync();
+                wishList.UserId = user.Id;
                 _context.Add(wishList);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", wishList.UserId);
             return View(wishList);
         }
 
@@ -93,7 +95,6 @@ namespace WhoWantsWhat.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", wishList.UserId);
             return View(wishList);
         }
 
