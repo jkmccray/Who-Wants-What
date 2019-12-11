@@ -1,4 +1,9 @@
-﻿@model WhoWantsWhat.Models.Item
+﻿@using Microsoft.AspNetCore.Identity
+
+@model WhoWantsWhat.Models.Item
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
@@ -10,39 +15,45 @@
     <h4>Item</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Creator)
+        <dt class="col-sm-2">
+            For
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Creator.Id)
+        <dd class="col-sm-10">
+            @Model.Creator.FirstName @Model.Creator.LastName
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Link)
+        <dt class="col-sm-2">
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Link)
+        <dd class="col-sm-10">
+            <a target="_blank" href="@Model.Link">Link</a>
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Purchased)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Purchased)
+        <dd class="col-sm-10">
+            <div class="form-group form-check custom-control custom-checkbox">
+                <label class="form-check-label custom-control-label">
+                    <input class="form-check-input custom-control-input" asp-for="Purchased" /> @Html.DisplayNameFor(model => model.Purchased)
+                </label>
+            </div>
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PurchasedAmount)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PurchasedAmount)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ItemId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (UserManager.GetUserId(User) == Model.CreatorId)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.ItemId">Edit</a>
+    }
+    <div><a href='javascript:history.go(-1)'>Go Back</a></div>
 </div>

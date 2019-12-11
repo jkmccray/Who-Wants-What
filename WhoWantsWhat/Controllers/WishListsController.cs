@@ -47,7 +47,8 @@ namespace WhoWantsWhat.Controllers
             }
 
             var wishList = await _context.WishLists
-                .Include(w => w.User)
+                .Include(w => w.WishListItems)
+                .ThenInclude(wli => wli.Item)
                 .FirstOrDefaultAsync(m => m.WishListId == id);
             if (wishList == null)
             {
