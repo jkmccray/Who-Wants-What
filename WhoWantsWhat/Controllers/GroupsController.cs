@@ -31,6 +31,7 @@ namespace WhoWantsWhat.Controllers
         public async Task<IActionResult> Index(string GroupSearchText)
         {
             var user = await GetCurrentUserAsync();
+            // By default, display the groups the user is a member of
             if (GroupSearchText == null)
             {
                 var viewModel = new MyGroupsAndSearchViewModel
@@ -43,6 +44,7 @@ namespace WhoWantsWhat.Controllers
                 };
                 return View(viewModel);
             }
+            // If the user has entered search text, display groups the user is not a member of (or has not been accepted into) based on the search text
             else
             {
                 var viewModel = new MyGroupsAndSearchViewModel
@@ -51,7 +53,7 @@ namespace WhoWantsWhat.Controllers
                     Groups = await _context.Groups
                     .Include(g => g.GroupUsers)
                     .ThenInclude(gu => gu.User)
-                    .Where(g => !g.GroupUsers.Any(gu => gu.User == user))
+                    .Where(g => !g.GroupUsers.Any(gu => gu.User == user) || !g.GroupUsers.FirstOrDefault(gu => gu.User == user).Joined)
                     .Where(g => g.Name.Contains(GroupSearchText))
                     .ToListAsync()
                 };
@@ -141,7 +143,7 @@ namespace WhoWantsWhat.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Leave group
+        // GET: Leave group - Display view to confirm user wants to leave the group
         public async Task<IActionResult> LeaveGroup(int? GroupId)
         {
             if (GroupId == null)
@@ -185,6 +187,7 @@ namespace WhoWantsWhat.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Display view to search for people to add to the group
         public async Task<IActionResult> AddPeopleToGroup(int GroupId)
         {
             var viewModel = new AddToPeopleToGroupViewModel
@@ -196,6 +199,7 @@ namespace WhoWantsWhat.Controllers
             return View(viewModel);
         }
 
+        // Search for users to add to the group and display search results
         public async Task<IActionResult> SearchForPeople(AddToPeopleToGroupViewModel viewModel)
         {
             var searchText = viewModel.SearchText;
@@ -211,10 +215,11 @@ namespace WhoWantsWhat.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> AddUserToGroup(IFormCollection form)
+        public async Task<IActionResult> AddUserToGroup(AddToPeopleToGroupViewModel viewModel)
         {
-            var groupId = int.Parse(Request.Form["GroupId"]);
-            var userId = Request.Form["UserId"][0];
+            var groupId = viewModel.GroupId;
+            var userId = viewModel.UserId;
+            var addedUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             var existingGroupUser = await _context.GroupUsers.FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId && !gu.Joined);
             if (existingGroupUser == null)
             {
@@ -226,37 +231,47 @@ namespace WhoWantsWhat.Controllers
                 };
                 _context.GroupUsers.Add(groupUser);
                 await _context.SaveChangesAsync();
+
+                var successMsg = TempData["SuccessMessage"] as string;
+                TempData["SuccessMessage"] = $"{addedUser.FirstName} {addedUser.LastName} has been added to your group!";
+
+                viewModel.Group = await _context.Groups.FirstOrDefaultAsync(g => g.GroupId == viewModel.GroupId);
+                return RedirectToAction(nameof(SearchForPeople), new { 
+                    GroupId = viewModel.GroupId,
+                    SearchText = viewModel.SearchText,
+                });
             }
+            // accept user request to join group by changing Joined to true
             else
             {
                 existingGroupUser.Joined = true;
                 _context.GroupUsers.Update(existingGroupUser);
                 await _context.SaveChangesAsync();
-
+                return RedirectToAction(nameof(Details), new { id = groupId });
             }
 
-            return RedirectToAction(nameof(Details), new { id = groupId });
         }
 
-        public async Task<IActionResult> RequestToJoinGroup(IFormCollection form)
+        public async Task<IActionResult> RequestToJoinGroup(RequestToJoinGroupViewModel viewModel)
         {
             var user = await GetCurrentUserAsync();
             var groupUser = new GroupUser
             {
-                GroupId = int.Parse(Request.Form["g.GroupId"]),
+                GroupId = viewModel.GroupId,
                 UserId = user.Id,
                 Joined = false
             };
             _context.GroupUsers.Add(groupUser);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            var groupSearchText = viewModel.GroupSearchText;
+            return RedirectToAction(nameof(Index), new { GroupSearchText = groupSearchText });
         }
 
-        public async Task<IActionResult> DeclineRequestToJoinGroup(IFormCollection form)
+        public async Task<IActionResult> DeclineRequestToJoinGroup(RequestToJoinGroupViewModel viewModel)
         {
-            var groupId = int.Parse(Request.Form["GroupId"]);
-            var userId = Request.Form["UserId"][0];
+            var groupId = viewModel.GroupId;
+            var userId = viewModel.UserId;
             var existingGroupUser = await _context.GroupUsers.FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId && !gu.Joined);
             _context.GroupUsers.Remove(existingGroupUser);
             await _context.SaveChangesAsync();

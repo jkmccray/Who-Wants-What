@@ -36,16 +36,18 @@
             }
         </ul>
         @if (!g.GroupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User)))
-        {
-            <form asp-action="RequestToJoinGroup" asp-controller="Groups">
-                <input label="GroupId" type="hidden" asp-for="@g.GroupId" />
-                <input type="submit" value="Request to Join" class="btn btn-secondary" />
-            </form>
-        }
+                {
+                    var GroupId = g.GroupId;
+                    <form asp-action="RequestToJoinGroup" asp-controller="Groups">
+                        <input label="GroupId" type="hidden" asp-for="@GroupId" />
+                        <input label="GroupSearchText" type="hidden" asp-for="GroupSearchText" />
+                        <input type="submit" value="Request to Join" class="btn btn-secondary" />
+                    </form>
+            }
         else if (!g.GroupUsers.FirstOrDefault(gu => gu.UserId == UserManager.GetUserId(User)).Joined)
-        {
-            <button disabled class="btn btn-secondary" >Requested to Join</button>
-        }
+            {
+                <button disabled class="btn btn-secondary" >Requested to Join</button>
+            }
     </div>
     }
 </div>
