@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 
-@model WhoWantsWhat.Models.Item
+@model WhoWantsWhat.Models.ViewModels.ItemsViewModels.ItemDetailsViewModel
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -16,44 +16,65 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Item.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Item.Name)
         </dd>
         <dt class="col-sm-2">
-            For
+            Created By
         </dt>
         <dd class="col-sm-10">
-            @Model.Creator.FirstName @Model.Creator.LastName
+            @Model.Item.Creator.FirstName @Model.Item.Creator.LastName
         </dd>
         <dt class="col-sm-2">
         </dt>
         <dd class="col-sm-10">
-            <a target="_blank" href="@Model.Link">Link</a>
+            <a target="_blank" href="@Model.Item.Link">Link</a>
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Purchased)
         </dt>
         <dd class="col-sm-10">
             <div class="form-group form-check custom-control custom-checkbox">
                 <label class="form-check-label custom-control-label">
-                    <input class="form-check-input custom-control-input" asp-for="Purchased" /> @Html.DisplayNameFor(model => model.Purchased)
+                    <input class="form-check-input custom-control-input" asp-for="Item.Purchased" /> @Html.DisplayNameFor(model => model.Item.Purchased)
                 </label>
             </div>
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PurchasedAmount)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PurchasedAmount)
-        </dd>
+        @if (Model.Item.PurchaserId == UserManager.GetUserId(User))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Item.PurchasedAmount)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Item.PurchasedAmount)
+            </dd>
+        }
+        @if (Model.WishListItemId != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.WishListItem.Notes)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.WishListItem.Notes)
+            </dd>
+        }
+        @if (Model.GiftListItemId != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.GiftListItem.Notes)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.GiftListItem.Notes)
+            </dd>
+        }
+
     </dl>
 </div>
 <div>
-    @if (UserManager.GetUserId(User) == Model.CreatorId)
+    @if (UserManager.GetUserId(User) == Model.Item.CreatorId)
     {
-        <a asp-action="Edit" asp-route-id="@Model.ItemId">Edit</a>
+        <a asp-action="Edit" asp-route-id="@Model.Item.ItemId">Edit</a>
     }
     <div><a href='javascript:history.go(-1)'>Go Back</a></div>
 </div>

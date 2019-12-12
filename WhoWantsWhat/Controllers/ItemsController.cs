@@ -35,7 +35,7 @@ namespace WhoWantsWhat.Controllers
         }
 
         // GET: Items/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? wishListItemId, int? giftListItemId)
         {
             if (id == null)
             {
@@ -50,7 +50,22 @@ namespace WhoWantsWhat.Controllers
                 return NotFound();
             }
 
-            return View(item);
+            var viewModel = new ItemDetailsViewModel
+            {
+                Item = item
+            };
+
+            if (wishListItemId != null)
+            {
+                viewModel.WishListItemId = wishListItemId;
+                viewModel.WishListItem = await _context.WishListItems.FindAsync(wishListItemId);
+            }
+            if (giftListItemId != null)
+            {
+                viewModel.GiftListItemId = giftListItemId;
+                viewModel.GiftListItem = await _context.GiftListItems.FindAsync(giftListItemId);
+            }
+            return View(viewModel);
         }
 
         // GET: Items/Create

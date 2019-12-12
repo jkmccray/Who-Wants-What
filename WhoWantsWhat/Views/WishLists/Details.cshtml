@@ -21,7 +21,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId })
+                            @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
                         </td>
                     </tr>
                 }
