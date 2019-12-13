@@ -19,6 +19,8 @@ namespace WhoWantsWhat.Models
         [Required]
         public bool Purchased { get; set; }
         public double PurchasedAmount { get; set; }
+        public string PurchaserId { get; set; }
+        public ApplicationUser Purchaser { get; set; }
         public ICollection<WishListItem> WishListItems { get; set; }
         public ICollection<GiftListItem> GiftListItems { get; set; }
     }

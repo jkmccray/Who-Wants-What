@@ -1,0 +1,28 @@
+﻿@model IEnumerable<WhoWantsWhat.Models.WishList>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>My Wish Lists</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+
+<a class="btn btn-primary" asp-action="Index" asp-controller="Items">View My Items</a>
+
+@if (Model != null)
+{
+    <table class="table table-hover">
+        <tbody>
+    @foreach (var wl in Model) {
+            <tr>
+                <td>
+                    @Html.ActionLink(wl.Name.ToString(), "Details", new { id = wl.WishListId })
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+}

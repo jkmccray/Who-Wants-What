@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@model WhoWantsWhat.Models.ViewModels.ItemsViewModels.ItemDetailsViewModel
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Item</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Item.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Item.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Created By
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Item.Creator.FirstName @Model.Item.Creator.LastName
+        </dd>
+        <dt class="col-sm-2">
+        </dt>
+        <dd class="col-sm-10">
+            <a target="_blank" href="@Model.Item.Link">Link</a>
+        </dd>
+        <dt class="col-sm-2">
+        </dt>
+        <dd class="col-sm-10">
+            <div class="form-group form-check custom-control custom-checkbox">
+                <label class="form-check-label custom-control-label">
+                    <input class="form-check-input custom-control-input" asp-for="Item.Purchased" /> @Html.DisplayNameFor(model => model.Item.Purchased)
+                </label>
+            </div>
+        </dd>
+        @if (Model.Item.PurchaserId == UserManager.GetUserId(User))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Item.PurchasedAmount)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Item.PurchasedAmount)
+            </dd>
+        }
+        @if (Model.WishListItemId != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.WishListItem.Notes)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.WishListItem.Notes)
+            </dd>
+        }
+        @if (Model.GiftListItemId != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.GiftListItem.Notes)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.GiftListItem.Notes)
+            </dd>
+        }
+
+    </dl>
+</div>
+<div>
+    @if (UserManager.GetUserId(User) == Model.Item.CreatorId)
+    {
+        <form>
+            <input type="hidden" asp-for="Item.ItemId" />
+            <input type="hidden" asp-for="WishListItemId" />
+            <input class="btn btn-primary" type="submit" value="Edit" asp-action="Edit" />
+        </form>
+    }
+</div>

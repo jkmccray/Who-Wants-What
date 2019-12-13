@@ -1,0 +1,44 @@
+﻿@model WhoWantsWhat.Models.WishList
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Name</h1>
+
+<form asp-action="CreateItem" asp-controller="Items">
+    <input type="hidden" asp-for="WishListId"/>
+    <input class="btn btn-primary" type="submit" value="Add Item To Wish List" />
+</form>
+
+<div>
+    <hr />
+    @if (Model.WishListItems != null)
+    {
+        <table class="table table-hover">
+            <tbody>
+                @foreach (var wi in Model.WishListItems)
+                {
+                    var Item = wi.Item;
+                    var WishListItemId = wi.WishListItemId;
+                    <tr>
+                        <td>
+                            @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
+                        </td>
+                        <td>
+                            <form>
+                                <input type="hidden" asp-for="@Item.ItemId" />
+                                <input type="hidden" asp-for="@WishListItemId" />
+                                <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items"/>
+                            </form>                        
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.WishListId">Edit</a> |
+    <a asp-action="Index">Back to My Wish Lists</a>
+</div>

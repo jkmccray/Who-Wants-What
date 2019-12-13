@@ -1,0 +1,47 @@
+﻿@model IEnumerable<WhoWantsWhat.Models.Item>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Purchased)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Name.ToString(), "Details", new { id = item.ItemId })
+            </td>
+            <td>
+                @if (item.Link != null)
+                {
+                    <a target="_blank" href="@item.Link">Link</a>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Purchased)
+            </td>
+            <td>
+                <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.ItemId">Delete Item</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
