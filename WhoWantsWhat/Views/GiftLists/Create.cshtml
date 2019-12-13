@@ -19,16 +19,21 @@
             </div>
             <div class="form-group">
                 <label asp-for="GiftList.ReceiverId" class="control-label"></label>
-                <select asp-for="GiftList.ReceiverId" class ="form-control" asp-items="@Model.ReceiverOptions"></select>
+                <select asp-for="GiftList.ReceiverId" class="form-control" asp-items="@Model.ReceiverOptions"></select>
+                <div class="text-danger mt-2 mb-2">    @TempData["ErrorMessage"] </div>
             </div>
-            <div class="form-group">
-                <label asp-for="GiftList.ReceiverName" class="control-label"></label>
-                <input asp-for="GiftList.ReceiverName" class="form-control" />
-                <span asp-validation-for="GiftList.ReceiverName" class="text-danger"></span>
-            </div>
+            @if (Model.GiftList != null && Model.GiftList.ReceiverId == "0")
+            {
+                <div class="form-group">
+                    <label class="text-success" asp-for="GiftList.ReceiverName" class="control-label">Add Receiver Name:</label>
+                    <input asp-for="GiftList.ReceiverName" class="form-control" />
+                    <span asp-validation-for="GiftList.ReceiverName" class="text-danger"></span>
+                </div>
+            }
             <div class="form-group">
                 <label asp-for="GiftList.ListTypeId" class="control-label"></label>
-                <select asp-for="GiftList.ListTypeId" class ="form-control" asp-items="@Model.ListTypeOptions"></select>
+                <select asp-for="GiftList.ListTypeId" class="form-control" asp-items="@Model.ListTypeOptions"></select>
+                <span asp-validation-for="GiftList.ListTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GiftList.DateNeeded" class="control-label"></label>

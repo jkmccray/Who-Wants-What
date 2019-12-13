@@ -80,37 +80,87 @@ namespace WhoWantsWhat.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GiftListId,Name,CreatorId,ReceiverId,ReceiverName,ListTypeId,DateNeeded,Budget")] GiftList giftList)
+        public async Task<IActionResult> Create(CreateGiftListViewModel viewModel)
         {
+            var user = await GetCurrentUserAsync();
+            viewModel.ListTypes = await _context.ListTypes.ToListAsync();
+
+            if (viewModel.GiftList.ReceiverId == null)
+            {
+                // if the user has not selected a receiver, get the possible receivers and listTypes from the db to use for the select lists
+                viewModel.Receivers = await _context.ApplicationUsers
+                    .Include(u => u.GroupUsers)
+                    .Where(u => u.Id != user.Id)
+                    // filter to include users who share a group with the logged in user
+                    .Where(u => u.GroupUsers
+                        .Any(gu => gu.Group.GroupUsers
+                            .Any(gu => gu.UserId == user.Id)))
+                    .ToListAsync();
+                var successMsg = TempData["ErrorMessage"] as string;
+                TempData["ErrorMessage"] = "Please select a receiver for this gift list";
+
+                return View(viewModel);
+            }
+
+            ModelState.Remove("GiftList.CreatorId");
             if (ModelState.IsValid)
             {
-                _context.Add(giftList);
+                viewModel.GiftList.CreatorId = user.Id;
+
+                // Check if the user selected "other" for the receiver
+                if (viewModel.GiftList.ReceiverId == "0")
+                {
+                    // Have the user enter a name for the receiver
+                    if (viewModel.GiftList.ReceiverName == null)
+                    {
+                       return View(viewModel);
+                    }
+                    // remove the receiver id of "0" so that the gift list can be entered into the db with a receiver id as null and a receiver name included
+                    viewModel.GiftList.ReceiverId = null;
+                }
+
+                // add gift list to the db
+                _context.Add(viewModel.GiftList);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatorId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", giftList.CreatorId);
-            ViewData["ListTypeId"] = new SelectList(_context.ListTypes, "ListTypeId", "Label", giftList.ListTypeId);
-            ViewData["ReceiverId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", giftList.ReceiverId);
-            return View(giftList);
+
+            // if model state is not valid, get the possible receivers and listTypes from the db to use for the select lists
+            viewModel.Receivers = await _context.ApplicationUsers
+                .Include(u => u.GroupUsers)
+                .Where(u => u.Id != user.Id)
+                // filter to include users who share a group with the logged in user
+                .Where(u => u.GroupUsers
+                    .Any(gu => gu.Group.GroupUsers
+                        .Any(gu => gu.UserId == user.Id)))
+                .ToListAsync();
+            return View(viewModel);
         }
 
         // GET: GiftLists/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
+            var viewModel = new EditGiftListViewModel();
+
+            viewModel.GiftList = await _context.GiftLists.FindAsync(id);
+
+            if (viewModel.GiftList == null)
             {
                 return NotFound();
             }
 
-            var giftList = await _context.GiftLists.FindAsync(id);
-            if (giftList == null)
-            {
-                return NotFound();
-            }
-            ViewData["CreatorId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", giftList.CreatorId);
-            ViewData["ListTypeId"] = new SelectList(_context.ListTypes, "ListTypeId", "Label", giftList.ListTypeId);
-            ViewData["ReceiverId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", giftList.ReceiverId);
-            return View(giftList);
+            var user = await GetCurrentUserAsync();
+            viewModel.Receivers = await _context.ApplicationUsers
+                    .Include(u => u.GroupUsers)
+                    .Where(u => u.Id != user.Id)
+                    // filter to include users who share a group with the logged in user
+                    .Where(u => u.GroupUsers
+                        .Any(gu => gu.Group.GroupUsers
+                            .Any(gu => gu.UserId == user.Id)))
+                    .ToListAsync();
+            viewModel.ListTypes = await _context.ListTypes.ToListAsync();
+            
+            return View(viewModel);
         }
 
         // POST: GiftLists/Edit/5
@@ -118,23 +168,53 @@ namespace WhoWantsWhat.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GiftListId,Name,CreatorId,ReceiverId,ReceiverName,ListTypeId,DateNeeded,Budget")] GiftList giftList)
+        public async Task<IActionResult> Edit(EditGiftListViewModel viewModel)
         {
-            if (id != giftList.GiftListId)
+            var user = await GetCurrentUserAsync();
+            viewModel.ListTypes = await _context.ListTypes.ToListAsync();
+
+            if (viewModel.GiftList.ReceiverId == null || viewModel.GiftList.ReceiverId == "")
             {
-                return NotFound();
+                // if the user has not selected a receiver, get the possible receivers and listTypes from the db to use for the select lists
+                viewModel.Receivers = await _context.ApplicationUsers
+                    .Include(u => u.GroupUsers)
+                    .Where(u => u.Id != user.Id)
+                    // filter to include users who share a group with the logged in user
+                    .Where(u => u.GroupUsers
+                        .Any(gu => gu.Group.GroupUsers
+                            .Any(gu => gu.UserId == user.Id)))
+                    .ToListAsync();
+                var successMsg = TempData["ErrorMessage"] as string;
+                TempData["ErrorMessage"] = "Please select a receiver for this gift list";
+
+                return View(viewModel);
             }
 
+            ModelState.Remove("GiftList.CreatorId");
             if (ModelState.IsValid)
             {
+                viewModel.GiftList.CreatorId = user.Id;
+
+                // Check if the user selected "other" for the receiver
+                if (viewModel.GiftList.ReceiverId == "0")
+                {
+                    // Have the user enter a name for the receiver
+                    if (viewModel.GiftList.ReceiverName == null)
+                    {
+                        return View(viewModel);
+                    }
+                    // remove the receiver id of "0" so that the gift list can be entered into the db with a receiver id as null and a receiver name included
+                    viewModel.GiftList.ReceiverId = null;
+                }
                 try
                 {
-                    _context.Update(giftList);
+                    // add gift list to the db
+                    _context.Update(viewModel.GiftList);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GiftListExists(giftList.GiftListId))
+                    if (!GiftListExists(viewModel.GiftList.GiftListId))
                     {
                         return NotFound();
                     }
@@ -145,10 +225,17 @@ namespace WhoWantsWhat.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatorId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", giftList.CreatorId);
-            ViewData["ListTypeId"] = new SelectList(_context.ListTypes, "ListTypeId", "Label", giftList.ListTypeId);
-            ViewData["ReceiverId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", giftList.ReceiverId);
-            return View(giftList);
+
+            // if model state is not valid, get the possible receivers and listTypes from the db to use for the select lists
+            viewModel.Receivers = await _context.ApplicationUsers
+                .Include(u => u.GroupUsers)
+                .Where(u => u.Id != user.Id)
+                // filter to include users who share a group with the logged in user
+                .Where(u => u.GroupUsers
+                    .Any(gu => gu.Group.GroupUsers
+                        .Any(gu => gu.UserId == user.Id)))
+                .ToListAsync();
+            return View(viewModel);
         }
 
         // GET: GiftLists/Delete/5
@@ -160,9 +247,10 @@ namespace WhoWantsWhat.Controllers
             }
 
             var giftList = await _context.GiftLists
-                .Include(g => g.Creator)
                 .Include(g => g.ListType)
                 .Include(g => g.Receiver)
+                .Include(g => g.GiftListItems)
+                .ThenInclude(gli => gli.Item)
                 .FirstOrDefaultAsync(m => m.GiftListId == id);
             if (giftList == null)
             {
@@ -177,6 +265,10 @@ namespace WhoWantsWhat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var giftListItems = await _context.GiftListItems.Where(gli => gli.GiftListId == id).ToListAsync();
+            _context.RemoveRange(giftListItems);
+            await _context.SaveChangesAsync();
+
             var giftList = await _context.GiftLists.FindAsync(id);
             _context.GiftLists.Remove(giftList);
             await _context.SaveChangesAsync();
