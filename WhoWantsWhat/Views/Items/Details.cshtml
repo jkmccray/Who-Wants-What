@@ -74,7 +74,16 @@
 <div>
     @if (UserManager.GetUserId(User) == Model.Item.CreatorId)
     {
-        <a asp-action="Edit" asp-route-id="@Model.Item.ItemId">Edit</a>
+        <form>
+            <input type="hidden" asp-for="Item.ItemId" />
+            <input type="hidden" asp-for="WishListItemId" />
+            <input class="btn btn-primary" type="submit" value="Edit" asp-action="Edit" />
+        </form>
     }
-    <div><a href='javascript:history.go(-1)'>Go Back</a></div>
+<form>
+    <input type="hidden" asp-for="Item.ItemId" />
+    <input type="hidden" asp-for="WishListItemId" />
+    <input type="hidden" asp-for="GiftListItemId" />
+    <input class="btn btn-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" />
+</form>
 </div>

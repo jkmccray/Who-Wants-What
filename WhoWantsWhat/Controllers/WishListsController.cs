@@ -111,10 +111,13 @@ namespace WhoWantsWhat.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var user = await GetCurrentUserAsync();
+                    wishList.UserId = user.Id; 
                     _context.Update(wishList);
                     await _context.SaveChangesAsync();
                 }
@@ -129,7 +132,7 @@ namespace WhoWantsWhat.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = wishList.WishListId }) ;
             }
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", wishList.UserId);
             return View(wishList);

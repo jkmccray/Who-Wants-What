@@ -1,4 +1,9 @@
-﻿@model WhoWantsWhat.Models.Item
+﻿@using Microsoft.AspNetCore.Identity
+
+@model WhoWantsWhat.Models.ViewModels.ItemsViewModels.EditItemViewModel
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,40 +17,39 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ItemId" />
+            <input type="hidden" asp-for="Item.ItemId" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatorId" class="control-label"></label>
-                <select asp-for="CreatorId" class="form-control" asp-items="ViewBag.CreatorId"></select>
-                <span asp-validation-for="CreatorId" class="text-danger"></span>
+                <label asp-for="Item.Name" class="control-label"></label>
+                <input asp-for="Item.Name" class="form-control" />
+                <span asp-validation-for="Item.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Link" class="control-label"></label>
-                <input asp-for="Link" class="form-control" />
-                <span asp-validation-for="Link" class="text-danger"></span>
+                <label asp-for="Item.Link" class="control-label"></label>
+                <input asp-for="Item.Link" class="form-control" />
+                <span asp-validation-for="Item.Link" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Purchased" /> @Html.DisplayNameFor(model => model.Purchased)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchasedAmount" class="control-label"></label>
-                <input asp-for="PurchasedAmount" class="form-control" />
-                <span asp-validation-for="PurchasedAmount" class="text-danger"></span>
-            </div>
+            @if (Model.WishListItemId > 0 && Model.Item.CreatorId == UserManager.GetUserId(User))
+            {
+                // Input for wish list notes
+                <div class="form-group">
+                    <label asp-for="WishListItem.Notes" class="control-label"></label>
+                    <input asp-for="WishListItem.Notes" class="form-control" />
+                </div>
+            }
+            @if (Model.GiftListItemId > 0 && Model.Item.CreatorId == UserManager.GetUserId(User))
+            {
+                // Input for wish list notes
+                <div class="form-group">
+                    <label asp-for="GiftListItem.Notes" class="control-label"></label>
+                    <input asp-for="GiftListItem.Notes" class="form-control" />
+                </div>
+            }
+            <input type="hidden" asp-for="WishListItemId" />
+            <input type="hidden" asp-for="GiftListItemId" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 

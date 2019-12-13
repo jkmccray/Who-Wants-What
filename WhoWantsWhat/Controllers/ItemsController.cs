@@ -138,20 +138,28 @@ namespace WhoWantsWhat.Controllers
         }
 
         // GET: Items/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id, EditItemViewModel viewModel)
         {
-            if (id == null)
+            viewModel.Item = await _context.Items.FindAsync(viewModel.Item.ItemId);
+
+            if (viewModel.WishListItemId > 0)
+            { 
+                viewModel.WishListItem = await _context.WishListItems
+                    .Where(wi => wi.WishListItemId == viewModel.WishListItemId)
+                    .FirstOrDefaultAsync();
+            }
+            if (viewModel.GiftListItemId > 0)
+            {
+                viewModel.GiftListItem = await _context.GiftListItems
+                    .Where(wi => wi.GiftListItemId == viewModel.GiftListItemId)
+                    .FirstOrDefaultAsync();
+            }
+            if (viewModel.Item == null)
             {
                 return NotFound();
             }
 
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-            ViewData["CreatorId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", item.CreatorId);
-            return View(item);
+            return View(viewModel);
         }
 
         // POST: Items/Edit/5
@@ -159,19 +167,37 @@ namespace WhoWantsWhat.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ItemId,Name,CreatorId,Link,Purchased,PurchasedAmount")] Item item)
+        public async Task<IActionResult> Edit(EditItemViewModel viewModel)
         {
-            if (id != item.ItemId)
-            {
-                return NotFound();
-            }
+            var item = viewModel.Item;
 
+            ModelState.Remove("Item.CreatorId");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var user = await GetCurrentUserAsync();
+                    item.CreatorId = user.Id;
                     _context.Update(item);
                     await _context.SaveChangesAsync();
+
+                    if (viewModel.WishListItemId > 0)
+                    {
+                        var wishListItem = await _context.WishListItems.FindAsync(viewModel.WishListItemId);
+                        wishListItem.Notes = viewModel.WishListItem.Notes;
+                        _context.Update(wishListItem);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Details), new { id = item.ItemId, wishListItemId = wishListItem.WishListItemId });
+
+                    }
+                    if (viewModel.GiftListItemId > 0)
+                    {
+                        var wishListItem = await _context.GiftListItems.FindAsync(viewModel.GiftListItemId);
+                        wishListItem.Notes = viewModel.WishListItem.Notes;
+                        _context.Update(wishListItem);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -184,10 +210,9 @@ namespace WhoWantsWhat.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatorId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", item.CreatorId);
-            return View(item);
+            return View(viewModel);
         }
 
         // GET: Items/Delete/5
@@ -220,6 +245,24 @@ namespace WhoWantsWhat.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> RemoveItemFromList(RemoveItemFromListViewModel viewModel)
+        {
+            if (viewModel.WishListItemId > 0)
+            {
+                var wishListItem = await _context.WishListItems.FindAsync(viewModel.WishListItemId);
+                _context.WishListItems.Remove(wishListItem);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), "WishLists", new { id = wishListItem.WishListId });
+            }
+            if (viewModel.GiftListItemId > 0)
+            {
+                var giftListItem = await _context.GiftListItems.FindAsync(viewModel.GiftListItemId);
+                _context.GiftListItems.Remove(giftListItem);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), "GiftLists", new { id = giftListItem.GiftListId });
+            }
+            return RedirectToAction(nameof(Index));
+        }
         private bool ItemExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);

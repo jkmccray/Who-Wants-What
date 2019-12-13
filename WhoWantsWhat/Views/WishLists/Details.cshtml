@@ -19,9 +19,16 @@
             <tbody>
                 @foreach (var wi in Model.WishListItems)
                 {
+                    var Item = wi.Item;
+                    var WishListItemId = wi.WishListItemId;
                     <tr>
                         <td>
                             @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
+                            <form>
+                                <input type="hidden" asp-for="@Item.ItemId" />
+                                <input type="hidden" asp-for="@WishListItemId" />
+                                <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items"/>
+                            </form>                        
                         </td>
                     </tr>
                 }
