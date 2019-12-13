@@ -1,0 +1,65 @@
+﻿@model IEnumerable<WhoWantsWhat.Models.GiftList>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New Gift List</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                For
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ListType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateNeeded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Budget)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Name.ToString(), "Details", new { id = item.GiftListId } )
+            </td>
+            <td>
+                @if (item.ReceiverId != null)
+                {
+                <span>@item.Receiver.FirstName @item.Receiver.LastName</span>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.ReceiverName)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ListType.Label)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateNeeded)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Budget)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GiftListId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.GiftListId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
