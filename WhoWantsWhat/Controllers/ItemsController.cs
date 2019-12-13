@@ -30,8 +30,9 @@ namespace WhoWantsWhat.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Items.Include(i => i.Creator);
-            return View(await applicationDbContext.ToListAsync());
+            var user = await GetCurrentUserAsync();
+            var items = await _context.Items.Where(i => i.Creator == user).ToListAsync();
+            return View(items);
         }
 
         // GET: Items/Details/5
@@ -239,9 +240,18 @@ namespace WhoWantsWhat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var wishListItems = await _context.WishListItems.Where(wli => wli.ItemId == id).ToListAsync();
+            _context.WishListItems.RemoveRange(wishListItems);
+            await _context.SaveChangesAsync();
+
+            var giftListItems = await _context.GiftListItems.Where(gli => gli.ItemId == id).ToListAsync();
+            _context.GiftListItems.RemoveRange(giftListItems);
+            await _context.SaveChangesAsync();
+
             var item = await _context.Items.FindAsync(id);
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
