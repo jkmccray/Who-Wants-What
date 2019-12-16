@@ -22,6 +22,9 @@
                     @Html.ActionLink(wl.Name.ToString(), "Details", new { id = wl.WishListId })
                 </td>
                 <td>
+                    <a class="btn btn-outline-primary" asp-action="ShareWishListView" asp-route-id="@wl.WishListId">Share</a>
+                </td>
+                <td>
                     <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@wl.WishListId">Delete</a>
                 </td>
             </tr>

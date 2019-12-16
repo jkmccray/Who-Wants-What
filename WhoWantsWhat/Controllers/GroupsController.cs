@@ -167,9 +167,18 @@ namespace WhoWantsWhat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LeaveGroupConfirmed(int GroupId)
         {
+            // Remove user from the group
             var user = await GetCurrentUserAsync();
             var groupUser = await _context.GroupUsers.FirstOrDefaultAsync(gu => gu.GroupId == GroupId && gu.User == user);
             _context.GroupUsers.Remove(groupUser);
+            await _context.SaveChangesAsync();
+
+            // Remove all entries in the GroupWishLists table, where user has shared wish lists with the group
+            var groupWishLists = await _context.GroupWishLists
+                .Include(gwl => gwl.WishList)
+                .Where(gwl => gwl.WishList.User == user && gwl.GroupId == GroupId)
+                .ToListAsync();
+            _context.RemoveRange(groupWishLists);
             await _context.SaveChangesAsync();
 
             // Check if group now has no users where Joined = true. If it does not have any, delete the group

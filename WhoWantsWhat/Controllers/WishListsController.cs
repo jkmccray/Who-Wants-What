@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WhoWantsWhat.Data;
 using WhoWantsWhat.Models;
+using WhoWantsWhat.Models.ViewModels.WishListsViewModels;
 
 namespace WhoWantsWhat.Controllers
 {
@@ -173,6 +174,45 @@ namespace WhoWantsWhat.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> ShareWishListView(int id)
+        {
+            var groupsAlreadySharedWith = await _context.Groups
+                .Include(g => g.GroupWishLists)
+                .Where(g => g.GroupWishLists.Any(gwl => gwl.WishListId == id))
+                .ToListAsync();
+            var user = await GetCurrentUserAsync();
+            var wishList = await _context.WishLists
+                    .Include(wl => wl.WishListItems)
+                    .ThenInclude(wli => wli.Item)
+                    .FirstOrDefaultAsync(wl => wl.WishListId == id);
+            var viewModel = new ShareWishListViewModel
+            {
+                WishList = wishList,
+                WishListId = wishList.WishListId,
+                Groups = await _context.Groups
+                    .Include(g => g.GroupUsers)
+                    .Include(g => g.GroupWishLists)
+                    .Where(g => g.GroupUsers.Any(gu => gu.User == user))
+                    //.Except(groupsAlreadySharedWith)
+                    .ToListAsync()
+            };
+
+            return View(viewModel);
+
+        }
+        public async Task<IActionResult> ShareWishList(ShareWishListViewModel viewModel)
+        {
+            var groupWishList = new GroupWishList
+            {
+                WishListId = viewModel.WishListId,
+                GroupId = viewModel.GroupId
+            };
+            _context.Add(groupWishList);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+
+        }
         private bool WishListExists(int id)
         {
             return _context.WishLists.Any(e => e.WishListId == id);

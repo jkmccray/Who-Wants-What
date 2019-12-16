@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WhoWantsWhat.Data;
 
 namespace WhoWantsWhat.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191216162510_shareWishLists")]
+    partial class shareWishLists
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,7 +254,7 @@ namespace WhoWantsWhat.Migrations
                             AccessFailedCount = 0,
                             Birthday = new DateTime(2001, 5, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             City = "Nashville",
-                            ConcurrencyStamp = "6d86770a-6eea-4721-b96a-43da53bc03c4",
+                            ConcurrencyStamp = "f9d641c1-29b0-4de9-a184-cd4648e4defa",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -260,7 +262,7 @@ namespace WhoWantsWhat.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELo+27nDpm1tY7eK/wI56Lo/WJr1wZYRfBObgb+grNHkdsq81wd+j7Sov9DqNP3gRg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMikI3OMnAxAOq9sLuY6jtzObabaJ8OonMaGVBKQ/A8J/1hjY7SPj/UXdMpEFYe81Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             State = "TN",
@@ -275,7 +277,7 @@ namespace WhoWantsWhat.Migrations
                             AccessFailedCount = 0,
                             Birthday = new DateTime(1986, 6, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             City = "Nashville",
-                            ConcurrencyStamp = "84fd92f2-7b4f-49ff-a9ae-37189a9569d9",
+                            ConcurrencyStamp = "e398b612-0e4e-487b-9acf-7eb191a71e8a",
                             Email = "tom@cat.com",
                             EmailConfirmed = true,
                             FirstName = "Tom",
@@ -283,7 +285,7 @@ namespace WhoWantsWhat.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TOM@CAT.COM",
                             NormalizedUserName = "TOM@CAT.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEB8j8PgeiKzeFZ1aSBCxXb+uyXZCdISDiy/R2yubFj8FoVXgQAWLpfvEFVGvX2fcCg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIBQtALLmw8uM1S+bFs3ZydzIB31Q3kU0akGLK9lAHfnRjJNetYlFCoUeLCEUfPQKQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794578",
                             State = "TN",
@@ -503,7 +505,7 @@ namespace WhoWantsWhat.Migrations
 
                     b.HasIndex("WishListId");
 
-                    b.ToTable("GroupWishLists");
+                    b.ToTable("GroupWishList");
                 });
 
             modelBuilder.Entity("WhoWantsWhat.Models.ImportantDate", b =>
