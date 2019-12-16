@@ -1,0 +1,59 @@
+﻿@model WhoWantsWhat.Models.ViewModels.GiftListsViewModels.EditGiftListViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>GiftList</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GiftList.GiftListId" />
+            <div class="form-group">
+                <label asp-for="GiftList.Name" class="control-label"></label>
+                <input asp-for="GiftList.Name" class="form-control" />
+                <span asp-validation-for="GiftList.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GiftList.ReceiverId" class="control-label"></label>
+                <select asp-for="GiftList.ReceiverId" class="form-control" asp-items="@Model.ReceiverOptions"></select>
+                <div class="text-danger mt-2 mb-2">    @TempData["ErrorMessage"] </div>
+            </div>
+            @if (Model.GiftList != null && Model.GiftList.ReceiverId == "0")
+            {
+                <div class="form-group">
+                    <label asp-for="GiftList.ReceiverName" class="control-label"></label>
+                    <input asp-for="GiftList.ReceiverName" class="form-control" />
+                    <span asp-validation-for="GiftList.ReceiverName" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="GiftList.ListTypeId" class="control-label"></label>
+                <select asp-for="GiftList.ListTypeId" class="form-control" asp-items="@Model.ListTypeOptions"></select>
+                <span asp-validation-for="GiftList.ListTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GiftList.DateNeeded" class="control-label"></label>
+                <input asp-for="GiftList.DateNeeded" class="form-control" />
+                <span asp-validation-for="GiftList.DateNeeded" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GiftList.Budget" class="control-label"></label>
+                <input asp-for="GiftList.Budget" class="form-control" />
+                <span asp-validation-for="GiftList.Budget" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -24,6 +24,7 @@ namespace WhoWantsWhat.Models
         [Required]
         [DataType(DataType.Date)]
         public DateTime DateNeeded { get; set; }
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public int Budget { get; set; }
         public ICollection<GiftListItem> GiftListItems { get; set; }
     }

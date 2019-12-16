@@ -17,12 +17,6 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd class>
     </dl>
     
     <form asp-action="Delete">
@@ -30,4 +24,31 @@
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
+</div>
+<div>
+    <hr />
+    @if (Model.WishListItems != null)
+    {
+        <table class="table table-hover">
+            <tbody>
+                @foreach (var wi in Model.WishListItems)
+                {
+                    var Item = wi.Item;
+                    var WishListItemId = wi.WishListItemId;
+                    <tr>
+                        <td>
+                            @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
+                        </td>
+                        <td>
+                            <form>
+                                <input type="hidden" asp-for="@Item.ItemId" />
+                                <input type="hidden" asp-for="@WishListItemId" />
+                                <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>

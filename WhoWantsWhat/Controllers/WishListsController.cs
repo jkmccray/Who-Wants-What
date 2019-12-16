@@ -162,6 +162,11 @@ namespace WhoWantsWhat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+
+            var wishListItems = await _context.WishListItems.Where(wli => wli.WishListId == id).ToListAsync();
+            _context.RemoveRange(wishListItems);
+            await _context.SaveChangesAsync();
+
             var wishList = await _context.WishLists.FindAsync(id);
             _context.WishLists.Remove(wishList);
             await _context.SaveChangesAsync();
