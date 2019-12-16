@@ -31,7 +31,11 @@ namespace WhoWantsWhat.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await GetCurrentUserAsync();
-            var items = await _context.Items.Where(i => i.Creator == user).ToListAsync();
+            var wishListItems = await _context.WishListItems.Where(wli => wli.Item.CreatorId == user.Id).Include(wli => wli.WishList).ToListAsync();
+            var items = await _context.Items
+                .Where(i => i.Creator == user)
+                //.Where(i => wishListItems.Any(wli => wli.ItemId == i.ItemId))
+                .ToListAsync();
             return View(items);
         }
 

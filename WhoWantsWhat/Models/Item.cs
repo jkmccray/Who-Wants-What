@@ -18,6 +18,7 @@ namespace WhoWantsWhat.Models
         public string Link { get; set; }
         [Required]
         public bool Purchased { get; set; }
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public double PurchasedAmount { get; set; }
         public string PurchaserId { get; set; }
         public ApplicationUser Purchaser { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace WhoWantsWhat.Models
@@ -29,5 +30,9 @@ namespace WhoWantsWhat.Models
         [Display(Name = "Zip Code")]
         public string ZipCode { get; set; }
         public ICollection<GroupUser> GroupUsers { get; set; }
+        [NotMapped]
+        public ICollection<WishList> WishLists { get; set; }
+        [NotMapped]
+        public ICollection<GiftList> GiftLists { get; set; }
     }
 }

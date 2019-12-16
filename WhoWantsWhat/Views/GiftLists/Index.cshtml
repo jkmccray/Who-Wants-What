@@ -56,8 +56,7 @@
                 @Html.DisplayFor(modelItem => item.Budget)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.GiftListId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.GiftListId">Delete</a>
+                <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.GiftListId">Delete</a>
             </td>
         </tr>
 }
