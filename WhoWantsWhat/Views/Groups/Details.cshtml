@@ -16,13 +16,20 @@
     <ul>
         @foreach (var u in Model.GroupUsers.Where(gu => gu.Joined))
         {
-            var UserId = u.UserId;
-            <li>
+        <li>
+            @if (u.UserId != UserManager.GetUserId(User))
+            {
+                var UserId = u.UserId;
                 <form>
                     <input type="hidden" asp-for="@UserId" />
-                    <button class="btn-link" asp-action="Index" asp-controller="WishLists">@u.User.FirstName @u.User.LastName</button>
+                    <button class="btn btn-link" asp-action="Index" asp-controller="WishLists">@u.User.FirstName @u.User.LastName</button>
                 </form>
-            </li>
+            }
+            else
+            {
+                <span disabled class="btn btn-link">@u.User.FirstName @u.User.LastName</span>
+            }
+        </li>
         }
     </ul>
 </div>

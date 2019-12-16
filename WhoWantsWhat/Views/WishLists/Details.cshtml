@@ -48,6 +48,7 @@
                                 <form>
                                     <input type="hidden" asp-for="@Item.ItemId" />
                                     <input type="hidden" asp-for="@UserId" />
+                                    <input type="hidden" asp-for="WishListId" />
                                     <input class="btn btn-outline-primary" type="submit" value="Add to Gift List" asp-action="AddItemToGiftList" asp-controller="Items" />
                                 </form>
                             }
