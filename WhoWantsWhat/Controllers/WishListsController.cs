@@ -59,6 +59,7 @@ namespace WhoWantsWhat.Controllers
         // GET: WishLists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var user = await GetCurrentUserAsync();
             if (id == null)
             {
                 return NotFound();
@@ -72,6 +73,16 @@ namespace WhoWantsWhat.Controllers
             {
                 return NotFound();
             }
+            if (wishList.UserId != user.Id)
+            {
+                var giftListItems = await _context.GiftListItems
+                    .Include(gli => gli.Item)
+                    .Where(gli => gli.GiftList.CreatorId == user.Id)
+                    .Where(gli => wishList.WishListItems.Any(wli => wli.ItemId == gli.ItemId))
+                    .ToListAsync();
+            }
+
+            //var viewModel = 
 
             return View(wishList);
         }
