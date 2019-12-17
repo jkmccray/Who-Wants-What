@@ -4,11 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>My Items</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -18,13 +16,13 @@
             <th>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Purchased)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    var ItemId = item.ItemId;
         <tr>
             <td>
                 @Html.ActionLink(item.Name.ToString(), "Details", new { id = item.ItemId })
@@ -36,7 +34,16 @@
                 }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Purchased)
+                <div class="custom-control custom-checkbox">
+                    <input disabled class="custom-control-input" type="checkbox" asp-for="@item.Purchased" />
+                    <label class="custom-control-label" asp-for="@item.Purchased"></label>
+                </div>
+            </td>
+            <td>
+                <form>
+                    <input type="hidden" asp-for="@ItemId" />
+                    <input class="btn btn-outline-primary" type="submit" value="Add to Another Wish List" asp-action="AddExistingItemToWishList" asp-controller="Items" />
+                </form>
             </td>
             <td>
                 <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.ItemId">Delete Item</a>

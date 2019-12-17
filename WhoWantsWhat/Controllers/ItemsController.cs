@@ -244,14 +244,17 @@ namespace WhoWantsWhat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Remove all entries in WishListItems table associated with the item to be deleted
             var wishListItems = await _context.WishListItems.Where(wli => wli.ItemId == id).ToListAsync();
             _context.WishListItems.RemoveRange(wishListItems);
             await _context.SaveChangesAsync();
 
+            // Remove all entries in GiftListItems table associated with the item to be deleted
             var giftListItems = await _context.GiftListItems.Where(gli => gli.ItemId == id).ToListAsync();
             _context.GiftListItems.RemoveRange(giftListItems);
             await _context.SaveChangesAsync();
 
+            // Remove the item
             var item = await _context.Items.FindAsync(id);
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();
@@ -333,6 +336,35 @@ namespace WhoWantsWhat.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), "Items", new { id = item.ItemId });
         }
+
+        public async Task<IActionResult> AddExistingItemToWishList(int ItemId)
+        {
+            var user = await GetCurrentUserAsync();
+            var viewModel = new AddExistingItemToWishListViewModel
+            {
+                ItemId = ItemId,
+                WishLists = await _context.WishLists
+                    .Include(wl => wl.User)
+                    .Where(wl => wl.User == user)
+                    .Where(wl => !wl.WishListItems.Any(wli => wli.ItemId == ItemId))
+                    .ToListAsync()
+            };
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> SaveExistingItemToWishList(AddExistingItemToWishListViewModel viewModel)
+        {
+            var wishListItem = new WishListItem
+            {
+                ItemId = viewModel.ItemId,
+                WishListId = viewModel.WishListId
+            };
+            _context.Add(wishListItem);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), "WishLists", new { id = viewModel.WishListId } );
+        }
+
         private bool ItemExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);

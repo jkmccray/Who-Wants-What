@@ -71,6 +71,8 @@ namespace WhoWantsWhat.Controllers
             }
 
             var wishList = await _context.WishLists
+                .Include(w => w.GroupWishLists)
+                .ThenInclude(gwl => gwl.Group)
                 .Include(w => w.WishListItems)
                 .ThenInclude(wli => wli.Item)
                 .FirstOrDefaultAsync(m => m.WishListId == id);
@@ -216,6 +218,7 @@ namespace WhoWantsWhat.Controllers
                     .Include(g => g.GroupUsers)
                     .Include(g => g.GroupWishLists)
                     .Where(g => g.GroupUsers.Any(gu => gu.User == user))
+                    .Where(g => !g.GroupWishLists.Any(gwl => gwl.WishListId == id))
                     //.Except(groupsAlreadySharedWith)
                     .ToListAsync()
             };
