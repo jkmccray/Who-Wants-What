@@ -19,8 +19,20 @@
     </form>
 }
 
+
 <div>
     <hr />
+    @if (Model.GroupWishLists.Count > 0)
+    {
+        <div>Shared With Groups:
+            <ul>
+                @foreach(var gwl in Model.GroupWishLists)
+                {
+                <li>@gwl.Group.Name</li>
+                }
+            </ul>
+        </div>
+    }
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-dismissible alert-success">
@@ -67,6 +79,10 @@
                     <td>
                         @if (Model.UserId == UserManager.GetUserId(User))
                         {
+                            <form>
+                                <input type="hidden" asp-for="@ItemId" />
+                                <input class="btn btn-outline-primary" type="submit" value="Add to Another Wish List" asp-action="AddExistingItemToWishList" asp-controller="Items" />
+                            </form>
                             <form>
                                 <input type="hidden" asp-for="@Item.ItemId" />
                                 <input type="hidden" asp-for="@WishListItemId" />

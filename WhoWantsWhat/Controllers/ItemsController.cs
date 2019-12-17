@@ -333,6 +333,35 @@ namespace WhoWantsWhat.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), "Items", new { id = item.ItemId });
         }
+
+        public async Task<IActionResult> AddExistingItemToWishList(int ItemId)
+        {
+            var user = await GetCurrentUserAsync();
+            var viewModel = new AddExistingItemToWishListViewModel
+            {
+                ItemId = ItemId,
+                WishLists = await _context.WishLists
+                    .Include(wl => wl.User)
+                    .Where(wl => wl.User == user)
+                    .Where(wl => !wl.WishListItems.Any(wli => wli.ItemId == ItemId))
+                    .ToListAsync()
+            };
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> SaveExistingItemToWishList(AddExistingItemToWishListViewModel viewModel)
+        {
+            var wishListItem = new WishListItem
+            {
+                ItemId = viewModel.ItemId,
+                WishListId = viewModel.WishListId
+            };
+            _context.Add(wishListItem);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), "WishLists", new { id = viewModel.WishListId } );
+        }
+
         private bool ItemExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);
