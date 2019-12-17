@@ -305,6 +305,34 @@ namespace WhoWantsWhat.Controllers
 
         }
 
+        public async Task<IActionResult> MarkItemAsPurchased(MarkItemAsPurchasedViewModel viewModel)
+        {
+            var user = await GetCurrentUserAsync();
+            var item = await _context.Items.FindAsync(viewModel.ItemId);
+            item.Purchased = true;
+            item.PurchaserId = user.Id;
+            _context.Update(item);
+            await _context.SaveChangesAsync();
+
+            if (viewModel.GiftListId > 0)
+            {
+                return RedirectToAction(nameof(Details), "GiftLists", new { id = viewModel.GiftListId });
+            }
+            if (viewModel.WishListId > 0)
+            {
+                return RedirectToAction(nameof(Details), "WishLists", new { id = viewModel.WishListId });
+            }
+            return RedirectToAction(nameof(Details), "Items", new { id = viewModel.ItemId });
+        }
+
+        public async Task<IActionResult> AddPurchaseAmount(Item Item)
+        {
+            var item = await _context.Items.FindAsync(Item.ItemId);
+            item.PurchasedAmount = Item.PurchasedAmount;
+            _context.Update(item);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), "Items", new { id = item.ItemId });
+        }
         private bool ItemExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);
