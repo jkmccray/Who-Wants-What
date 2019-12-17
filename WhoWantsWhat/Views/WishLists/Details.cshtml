@@ -74,6 +74,12 @@
                                 <input type="hidden" asp-for="WishListId" />
                                 <input class="btn btn-outline-primary" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
                             </form>
+                            <form>
+                                <input type="hidden" asp-for="@Item.ItemId" />
+                                <input type="hidden" asp-for="@UserId" />
+                                <input type="hidden" asp-for="WishListId" />
+                                <input class="btn btn-outline-primary" type="submit" value="Add to Gift List" asp-action="AddItemToGiftList" asp-controller="Items" />
+                            </form>
                         }
                     </td>
                     <td>
@@ -89,15 +95,7 @@
                                 <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
                             </form>
                         }
-                        else
-                        {
-                            <form>
-                                <input type="hidden" asp-for="@Item.ItemId" />
-                                <input type="hidden" asp-for="@UserId" />
-                                <input type="hidden" asp-for="WishListId" />
-                                <input class="btn btn-outline-primary" type="submit" value="Add to Gift List" asp-action="AddItemToGiftList" asp-controller="Items" />
-                            </form>
-                        }
+
                     </td>
                 </tr>
                 }

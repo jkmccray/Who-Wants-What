@@ -10,7 +10,7 @@
 <form asp-action="SaveExistingItemToWishList">
     <input type="hidden" asp-for="ItemId" />
     <div class="form-group">
-        <label asp-for="WishListId" class="control-label"></label>
+        <label asp-for="WishListId" class="control-label">Wish List</label>
         <select asp-for="WishListId" class="form-control" asp-items="@Model.WishListOptions"></select>
         <span asp-validation-for="WishListId" class="text-danger"></span>
     </div>

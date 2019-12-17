@@ -244,14 +244,17 @@ namespace WhoWantsWhat.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Remove all entries in WishListItems table associated with the item to be deleted
             var wishListItems = await _context.WishListItems.Where(wli => wli.ItemId == id).ToListAsync();
             _context.WishListItems.RemoveRange(wishListItems);
             await _context.SaveChangesAsync();
 
+            // Remove all entries in GiftListItems table associated with the item to be deleted
             var giftListItems = await _context.GiftListItems.Where(gli => gli.ItemId == id).ToListAsync();
             _context.GiftListItems.RemoveRange(giftListItems);
             await _context.SaveChangesAsync();
 
+            // Remove the item
             var item = await _context.Items.FindAsync(id);
             _context.Items.Remove(item);
             await _context.SaveChangesAsync();

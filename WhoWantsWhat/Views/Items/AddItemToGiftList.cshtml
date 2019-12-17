@@ -12,7 +12,7 @@
     <input type="hidden" asp-for="UserId" />
     <input type="hidden" asp-for="WishListId" />
     <div class="form-group">
-        <label asp-for="GiftListId" class="control-label"></label>
+        <label asp-for="GiftListId" class="control-label">Gift List</label>
         <select asp-for="GiftListId" class="form-control" asp-items="@Model.GiftListOptions"></select>
         <span asp-validation-for="GiftListId" class="text-danger"></span>
     </div>
