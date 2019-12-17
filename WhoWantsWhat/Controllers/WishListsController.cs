@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WhoWantsWhat.Data;
 using WhoWantsWhat.Models;
+using WhoWantsWhat.Models.ViewModels.WishListsViewModels;
 
 namespace WhoWantsWhat.Controllers
 {
@@ -26,15 +27,32 @@ namespace WhoWantsWhat.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: WishLists
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string UserId)
         {
             var user = await GetCurrentUserAsync();
-            var wishLists = await _context.WishLists
-                .Include(w => w.WishListItems)
-                .ThenInclude(wi => wi.Item)
-                .Where(w => w.User == user)
-                .ToListAsync();
-
+            var wishLists = new List<WishList>();
+            
+            if (UserId == null)
+            {
+                wishLists = await _context.WishLists
+                    .Include(w => w.WishListItems)
+                    .ThenInclude(wi => wi.Item)
+                    .Where(w => w.User == user)
+                    .ToListAsync();
+            }
+            else
+            {
+                var sharedGroups = await _context.Groups
+                    .Where(g => g.GroupUsers.Any(gu => gu.User == user && gu.Joined) && g.GroupUsers.Any(gu => gu.UserId == UserId && gu.Joined))
+                    .ToListAsync();
+                wishLists = await _context.WishLists
+                    .Include(w => w.User)
+                    .Include(w => w.WishListItems)
+                    .ThenInclude(wi => wi.Item)
+                    .Where(w => w.UserId == UserId)
+                    .Where(w => w.GroupWishLists.Any(gwl => gwl.Group.GroupUsers.Any(gu => gu.User == user)))
+                    .ToListAsync();
+            }
             return View(wishLists);
         }
 
@@ -173,6 +191,45 @@ namespace WhoWantsWhat.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> ShareWishListView(int id)
+        {
+            var groupsAlreadySharedWith = await _context.Groups
+                .Include(g => g.GroupWishLists)
+                .Where(g => g.GroupWishLists.Any(gwl => gwl.WishListId == id))
+                .ToListAsync();
+            var user = await GetCurrentUserAsync();
+            var wishList = await _context.WishLists
+                    .Include(wl => wl.WishListItems)
+                    .ThenInclude(wli => wli.Item)
+                    .FirstOrDefaultAsync(wl => wl.WishListId == id);
+            var viewModel = new ShareWishListViewModel
+            {
+                WishList = wishList,
+                WishListId = wishList.WishListId,
+                Groups = await _context.Groups
+                    .Include(g => g.GroupUsers)
+                    .Include(g => g.GroupWishLists)
+                    .Where(g => g.GroupUsers.Any(gu => gu.User == user))
+                    //.Except(groupsAlreadySharedWith)
+                    .ToListAsync()
+            };
+
+            return View(viewModel);
+
+        }
+        public async Task<IActionResult> ShareWishList(ShareWishListViewModel viewModel)
+        {
+            var groupWishList = new GroupWishList
+            {
+                WishListId = viewModel.WishListId,
+                GroupId = viewModel.GroupId
+            };
+            _context.Add(groupWishList);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+
+        }
         private bool WishListExists(int id)
         {
             return _context.WishLists.Any(e => e.WishListId == id);

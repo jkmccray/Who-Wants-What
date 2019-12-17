@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace WhoWantsWhat.Models
 {
-    public class Group
+    public class GroupWishList
     {
         [Required]
-        public int GroupId { get; set; }
+        public int GroupWishListId { get; set; }
         [Required]
-        public string Name { get; set; }
-        public ICollection<GroupUser> GroupUsers{ get; set; }
-        public ICollection<GroupWishList> GroupWishLists { get; set; }
+        public int GroupId { get; set; }
+        public Group Group { get; set; }
+        [Required]
+        public int WishListId { get; set; }
+        public WishList WishList { get; set; }
     }
 }

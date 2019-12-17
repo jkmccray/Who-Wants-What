@@ -1,0 +1,44 @@
+﻿@model WhoWantsWhat.Models.ViewModels.WishListsViewModels.ShareWishListViewModel
+
+
+@{
+    ViewData["Title"] = "ShareWishListView";
+}
+
+<h1>@Model.WishList.Name</h1>
+
+<form asp-action="ShareWishList" asp-controller="WishLists">
+    <input type="hidden" asp-for="WishListId" />
+    <label asp-for="GroupId" class="control-label">Select Group</label>
+    <select asp-for="GroupId" class="form-control" asp-items="@Model.GroupOptions"></select>
+    <input class="btn btn-primary" type="submit" value="Share List" />
+</form>
+
+<div>
+    <hr />
+    @if (Model.WishList.WishListItems != null)
+    {
+        <table class="table table-hover">
+            <tbody>
+                @foreach (var wi in Model.WishList.WishListItems)
+                {
+                    var Item = wi.Item;
+                    var WishListItemId = wi.WishListItemId;
+                    <tr>
+                        <td>
+                            @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
+                        </td>
+                        <td>
+                            <form>
+                                <input type="hidden" asp-for="@Item.ItemId" />
+                                <input type="hidden" asp-for="@WishListItemId" />
+                                <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+

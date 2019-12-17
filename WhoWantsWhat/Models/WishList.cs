@@ -16,5 +16,7 @@ namespace WhoWantsWhat.Models
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         public ICollection<WishListItem> WishListItems { get; set; }
+        public ICollection<GroupWishList> GroupWishLists { get; set; }
+
     }
 }

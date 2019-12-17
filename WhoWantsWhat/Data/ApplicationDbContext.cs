@@ -25,6 +25,7 @@ namespace WhoWantsWhat.Data
         public DbSet<WishListItem> WishListItems { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<ImportantDate> ImportantDates { get; set; }
+        public DbSet<GroupWishList> GroupWishLists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

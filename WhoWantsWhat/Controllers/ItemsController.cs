@@ -277,6 +277,34 @@ namespace WhoWantsWhat.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+
+        public async Task<IActionResult> AddItemToGiftList(AddItemToGiftListViewModel viewModel)
+        {
+            var user = await GetCurrentUserAsync();
+
+            viewModel.GiftLists = await _context.GiftLists
+                .Where(g => g.CreatorId == user.Id && g.ReceiverId == viewModel.UserId)
+                .ToListAsync();
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> SaveWishListItemToGiftList(AddItemToGiftListViewModel viewModel)
+        {
+            var giftListItem = new GiftListItem
+            {
+                ItemId = viewModel.Item.ItemId,
+                GiftListId = viewModel.GiftListId
+            };
+            _context.Add(giftListItem);
+            await _context.SaveChangesAsync();
+            var successMsg = TempData["SuccessMessage"] as string;
+            TempData["SuccessMessage"] = "Added to your list";
+            return RedirectToAction(nameof(Details), "WishLists", new { id = viewModel.WishListId });
+
+        }
+
         private bool ItemExists(int id)
         {
             return _context.Items.Any(e => e.ItemId == id);
