@@ -27,7 +27,7 @@ namespace WhoWantsWhat.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: WishLists
-        public async Task<IActionResult> Index(string UserId)
+        public async Task<IActionResult> Index(string UserId, int GroupId)
         {
             var user = await GetCurrentUserAsync();
             var wishLists = new List<WishList>();
@@ -52,6 +52,12 @@ namespace WhoWantsWhat.Controllers
                     .Where(w => w.UserId == UserId)
                     .Where(w => w.GroupWishLists.Any(gwl => gwl.Group.GroupUsers.Any(gu => gu.User == user)))
                     .ToListAsync();
+                var errorMsg = TempData["ErrorMessage"] as string;
+                if (wishLists.Count() == 0)
+                {
+                    TempData["ErrorMessage"] = "This user has not shared any wish lists with your groups";
+                    return RedirectToAction(nameof(Details), "Groups", new { id = GroupId });
+                }
             }
             return View(wishLists);
         }

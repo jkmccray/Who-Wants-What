@@ -9,43 +9,41 @@
     ViewData["Title"] = "Index";
 }
 
-@if (Model.Count() > 0)
+@if (Model.Count() > 0 && Model.ToList()[0].UserId != UserManager.GetUserId(User))
 {
-    @if (Model.ToList()[0].UserId == UserManager.GetUserId(User))
-    {
-        <h1>My Wish Lists</h1>
-
-        <p>
-            <a class="btn btn-primary" asp-action="Create">Create New</a>
-        </p>
-
-        <a class="btn btn-primary" asp-action="Index" asp-controller="Items">View My Items</a>
-    }
-    else
-    {
-        <h1>@Model.ToList()[0].User.FirstName @Model.ToList()[0].User.LastName's Wish Lists</h1>
-    }
+    <h1>@Model.ToList()[0].User.FirstName @Model.ToList()[0].User.LastName's Wish Lists</h1>
 }
+else
+{
+    <h1>My Wish Lists</h1>
+
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Create New</a>
+    </p>
+
+    <a class="btn btn-primary" asp-action="Index" asp-controller="Items">View My Items</a>
+}
+
 @if (Model != null)
-{ 
+{
     <table class="table table-hover">
         <tbody>
             @foreach (var wl in Model)
             {
-            <tr>
-                <td>
-                    @Html.ActionLink(wl.Name.ToString(), "Details", new { id = wl.WishListId })
-                </td>
-                @if (Model.ToList()[0].UserId == UserManager.GetUserId(User))
-                {
+                <tr>
                     <td>
-                        <a class="btn btn-outline-primary" asp-action="ShareWishListView" asp-route-id="@wl.WishListId">Share</a>
+                        @Html.ActionLink(wl.Name.ToString(), "Details", new { id = wl.WishListId })
                     </td>
-                    <td>
-                        <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@wl.WishListId">Delete</a>
-                    </td>
-                }
-            </tr>
+                    @if (Model.ToList()[0].UserId == UserManager.GetUserId(User))
+                    {
+                        <td>
+                            <a class="btn btn-outline-primary" asp-action="ShareWishListView" asp-route-id="@wl.WishListId">Share</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@wl.WishListId">Delete</a>
+                        </td>
+                    }
+                </tr>
             }
         </tbody>
     </table>

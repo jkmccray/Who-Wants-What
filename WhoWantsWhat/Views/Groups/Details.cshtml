@@ -13,23 +13,25 @@
 
 <div>
     <h4>Group Members:</h4>
+    <div class="text-danger mt-2 mb-2">    @TempData["ErrorMessage"] </div>
     <ul>
         @foreach (var u in Model.GroupUsers.Where(gu => gu.Joined))
         {
-        <li>
-            @if (u.UserId != UserManager.GetUserId(User))
-            {
-                var UserId = u.UserId;
+            <li>
+                @if (u.UserId != UserManager.GetUserId(User))
+                {
+                    var UserId = u.UserId;
                 <form>
                     <input type="hidden" asp-for="@UserId" />
+                    <input type="hidden" asp-for="GroupId" />
                     <button class="btn btn-link" asp-action="Index" asp-controller="WishLists">@u.User.FirstName @u.User.LastName</button>
                 </form>
-            }
-            else
-            {
-                <span disabled class="btn btn-link">@u.User.FirstName @u.User.LastName</span>
-            }
-        </li>
+                }
+                else
+                {
+                    <span disabled class="btn btn-link">@u.User.FirstName @u.User.LastName</span>
+                }
+            </li>
         }
     </ul>
 </div>

@@ -96,7 +96,7 @@ namespace WhoWantsWhat.Controllers
                         .Any(gu => gu.Group.GroupUsers
                             .Any(gu => gu.UserId == user.Id)))
                     .ToListAsync();
-                var successMsg = TempData["ErrorMessage"] as string;
+                var errorMsg = TempData["ErrorMessage"] as string;
                 TempData["ErrorMessage"] = "Please select a receiver for this gift list";
 
                 return View(viewModel);
