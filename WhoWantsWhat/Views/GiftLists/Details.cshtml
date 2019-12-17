@@ -60,19 +60,41 @@
                 @foreach (var gi in Model.GiftListItems)
                 {
                     var Item = gi.Item;
+                    var ItemId = gi.Item.ItemId;
                     var GiftListItemId = gi.GiftListItemId;
-                    <tr>
-                        <td>
-                            @Html.ActionLink(gi.Item.Name.ToString(), "Details", "Items", new { id = gi.ItemId, giftListItemId = gi.GiftListItemId })
-                        </td>
-                        <td>
+                    var textClass = "";
+                    if (gi.Item.Purchased)
+                    {
+                        textClass = "text-success";
+                    }
+                <tr>
+                    <td>
+                        @Html.ActionLink(gi.Item.Name.ToString(), "Details", "Items", new { id = gi.ItemId, giftListItemId = gi.GiftListItemId })
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input disabled class="custom-control-input" type="checkbox" asp-for="@gi.Item.Purchased" />
+                            <label class="custom-control-label @textClass" asp-for="@gi.Item.Purchased"></label>
+                        </div>
+                    </td>
+                    <td>
+                        @if(!gi.Item.Purchased)
+                        {
                             <form>
-                                <input type="hidden" asp-for="@Item.ItemId" />
-                                <input type="hidden" asp-for="@GiftListItemId" />
-                                <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
+                                <input type="hidden" asp-for="@ItemId" />
+                                <input type="hidden" asp-for="GiftListId" />
+                                <input class="btn btn-outline-primary" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
                             </form>
-                        </td>
-                    </tr>
+                        }
+                    </td>
+                    <td>
+                        <form>
+                            <input type="hidden" asp-for="@Item.ItemId" />
+                            <input type="hidden" asp-for="@GiftListItemId" />
+                            <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
+                        </form>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
