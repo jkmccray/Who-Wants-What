@@ -1,0 +1,22 @@
+﻿@model WhoWantsWhat.Models.ViewModels.ItemsViewModels.AddItemToGiftListViewModel
+
+@{
+    ViewData["Title"] = "AddItemToGiftList";
+}
+
+<h1>Select List</h1>
+
+
+<form asp-action="SaveWishListItemToGiftList">
+    <input type="hidden" asp-for="Item.ItemId" />
+    <input type="hidden" asp-for="UserId" />
+    <input type="hidden" asp-for="WishListId" />
+    <div class="form-group">
+        <label asp-for="GiftListId" class="control-label"></label>
+        <select asp-for="GiftListId" class="form-control" asp-items="@Model.GiftListOptions"></select>
+        <span asp-validation-for="GiftListId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>

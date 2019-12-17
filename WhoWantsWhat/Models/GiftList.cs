@@ -19,9 +19,11 @@ namespace WhoWantsWhat.Models
         public ApplicationUser Receiver { get; set; }
         public string ReceiverName { get; set; }
         [Required]
+        [Display(Name="List Type")]
         public int ListTypeId { get; set; }
         public ListType ListType { get; set; }
         [Required]
+        [Display(Name="Date Needed")]
         [DataType(DataType.Date)]
         public DateTime DateNeeded { get; set; }
         [DisplayFormat(DataFormatString = "{0:C}")]
