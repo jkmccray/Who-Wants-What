@@ -1,4 +1,4 @@
-# Who-Wants-What
+# Who Wants What 
 ### A Wish List App
 NSS Back-End Capstone
 
