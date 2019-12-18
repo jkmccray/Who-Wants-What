@@ -44,7 +44,9 @@ namespace WhoWantsWhat
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
             }
+
             else
             {
                 app.UseExceptionHandler("/Home/Error");
