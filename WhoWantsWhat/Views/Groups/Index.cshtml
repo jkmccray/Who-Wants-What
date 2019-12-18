@@ -28,27 +28,36 @@
     @foreach (var g in Model.Groups)
     {
         var groupUsers = g.GroupUsers.OrderBy(gu => gu.User.LastName);
-    <div class="group-card">
-        <h4>@Html.ActionLink(g.Name.ToString(), "Details", new { id = g.GroupId })</h4>
-        <ul>
-            @foreach (var u in groupUsers.Where(gu => gu.Joined))
-            {
-                <li>@u.User.FirstName @u.User.LastName</li>
-            }
-        </ul>
-        @if (!groupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User)))
+        <div class="group-card">
+            <h4 class="card-header group-card-header">@Html.ActionLink(g.Name.ToString(), "Details", new { id = g.GroupId })</h4>
+            <ul class="list-group">
+                @foreach (var u in groupUsers.Where(gu => gu.Joined))
                 {
+                    var UserId = u.UserId;
                     var GroupId = g.GroupId;
-                    <form asp-action="RequestToJoinGroup" asp-controller="Groups">
-                        <input label="GroupId" type="hidden" asp-for="@GroupId" />
-                        <input label="GroupSearchText" type="hidden" asp-for="GroupSearchText" />
-                        <input type="submit" value="Request to Join" class="btn btn-secondary" />
-                    </form>
-            }
-        else if (!groupUsers.FirstOrDefault(gu => gu.UserId == UserManager.GetUserId(User)).Joined)
-            {
-                <button disabled class="btn btn-secondary" >Requested to Join</button>
-            }
-    </div>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        @*@u.User.FirstName @u.User.LastName*@
+                        <form>
+                            <input type="hidden" asp-for="@UserId" />
+                            <input type="hidden" asp-for="@GroupId" />
+                            <button class="btn btn-link" asp-action="Index" asp-controller="WishLists">@u.User.FirstName @u.User.LastName</button>
+                        </form>
+                    </li>
+                }
+            </ul>
+            @if (!groupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User)))
+                    {
+                        var GroupId = g.GroupId;
+                        <form asp-action="RequestToJoinGroup" asp-controller="Groups">
+                            <input label="GroupId" type="hidden" asp-for="@GroupId" />
+                            <input label="GroupSearchText" type="hidden" asp-for="GroupSearchText" />
+                            <input type="submit" value="Request to Join" class="btn btn-secondary" />
+                        </form>
+                }
+            else if (!groupUsers.FirstOrDefault(gu => gu.UserId == UserManager.GetUserId(User)).Joined)
+                {
+                    <button disabled class="btn btn-secondary disabled">Requested to Join</button>
+                }
+        </div>
     }
 </div>

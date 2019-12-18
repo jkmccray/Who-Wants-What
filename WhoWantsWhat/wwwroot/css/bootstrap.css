@@ -2828,11 +2828,12 @@ fieldset:disabled a.btn {
           box-shadow: 0 0 0 0.2rem rgba(221, 221, 221, 0.5);
 }
 
-.btn-secondary.disabled, .btn-secondary:disabled {
-  color: #1a1a1a;
-  background-color: #fff;
-  border-color: #fff;
-}
+    .btn-secondary.disabled, .btn-secondary:disabled {
+        color: #1a1a1a;
+        background-color: #fff;
+        border-color: #fff;
+        cursor: default;
+    }
 
 .btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active,
 .show > .btn-secondary.dropdown-toggle {
@@ -5657,7 +5658,7 @@ a.badge-dark:focus, a.badge-dark.focus {
       -ms-flex-direction: column;
           flex-direction: column;
   padding-left: 0;
-  margin-bottom: 0;
+  margin: 2em;
 }
 
 .list-group-item-action {

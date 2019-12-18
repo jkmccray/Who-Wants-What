@@ -69,12 +69,12 @@
                     <td>
                         @if (!wi.Item.Purchased && Model.UserId != UserManager.GetUserId(User))
                         {
-                            <form>
+                            <form class="form-inline">
                                 <input type="hidden" asp-for="@ItemId" />
                                 <input type="hidden" asp-for="WishListId" />
                                 <input class="btn btn-outline-primary" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
                             </form>
-                            <form>
+                            <form class="form-inline">
                                 <input type="hidden" asp-for="@Item.ItemId" />
                                 <input type="hidden" asp-for="@UserId" />
                                 <input type="hidden" asp-for="WishListId" />
