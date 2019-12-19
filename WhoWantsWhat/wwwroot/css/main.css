@@ -25,6 +25,9 @@
     text-align: left;
 }
 
+.text-right {
+    text-align: right;
+}
 /*---------------- Login page ----------------*/
 .logo-section {
     /*display: flex;*/

@@ -9,17 +9,18 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>@Model.Name</h1>
+<div class="form-inline mb-4 wish-list-index-header">
+    <h1 class="col-lg-6">@Model.Name</h1>
 
-@if (Model.UserId == UserManager.GetUserId(User))
-{
-    <form asp-action="CreateItem" asp-controller="Items">
-        <input type="hidden" asp-for="WishListId" />
-        <input class="btn btn-primary" type="submit" value="Add Item To Wish List" />
-    </form>
-    <a class="btn btn-primary"
-       asp-action="ShareWishListView" asp-controller="WishLists" asp-route-id="@Model.WishListId">Share</a>
-}
+    @if (Model.UserId == UserManager.GetUserId(User))
+    {
+        <div class="col-lg-6 text-right">
+            <a class="btn btn-primary" asp-action="CreateItem" asp-controller="Items" asp-route-WishListId="@Model.WishListId">Add Item To Wish List</a>
+            <a class="btn btn-primary"
+               asp-action="ShareWishListView" asp-controller="WishLists" asp-route-id="@Model.WishListId">Share List</a>
+        </div>
+    }
+</div>
 
 
 <div>
@@ -119,6 +120,7 @@
 {
     <div class="mt-4 mb-4">
         <a asp-action="Edit" asp-route-id="@Model.WishListId">Edit</a> |
+        <a asp-action="Delete" asp-route-id="@Model.WishListId">Delete</a> |
         <a asp-action="Index">Back to My Wish Lists</a>
     </div>
 }
