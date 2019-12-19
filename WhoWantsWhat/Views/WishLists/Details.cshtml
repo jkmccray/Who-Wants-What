@@ -81,19 +81,19 @@
                                 <div class="form-inline mt-4 mb-4 text-center">
                                     @if (!wi.Item.Purchased && Model.UserId != UserManager.GetUserId(User))
                                     {
-                                        <form>
+                                        <form class="btn-width-100">
                                             <input type="hidden" asp-for="@ItemId" />
                                             <input type="hidden" asp-for="WishListId" />
-                                            <input class="btn btn-outline-primary mr-3 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
+                                            <input class="btn btn-outline-primary btn-width-100 mr-3 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
                                         </form>
-                                        <form>
+                                        <form class="btn-width-100">
                                             <input type="hidden" asp-for="@Item.ItemId" />
                                             <input type="hidden" asp-for="@UserId" />
                                             <input type="hidden" asp-for="WishListId" />
-                                            <input class="btn btn-outline-primary pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Add to Gift List" asp-action="AddItemToGiftList" asp-controller="Items" />
+                                            <input class="btn btn-outline-primary btn-width-100 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Add to Gift List" asp-action="AddItemToGiftList" asp-controller="Items" />
                                         </form>
                                     }
-                                    <div class=wish-list-item-btn-container>
+                                    <div class="wish-list-item-btn-container">
                                         @if (Model.UserId == UserManager.GetUserId(User))
                                         {
                                             <form>

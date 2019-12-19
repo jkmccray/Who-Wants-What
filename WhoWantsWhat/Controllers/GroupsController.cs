@@ -176,7 +176,7 @@ namespace WhoWantsWhat.Controllers
             // Remove all entries in the GroupWishLists table, where user has shared wish lists with the group
             var groupWishLists = await _context.GroupWishLists
                 .Include(gwl => gwl.WishList)
-                .Where(gwl => gwl.WishList.User == user && gwl.GroupId == GroupId)
+                .Where(gwl => gwl.WishList.UserId == user.Id && gwl.GroupId == GroupId)
                 .ToListAsync();
             _context.RemoveRange(groupWishLists);
             await _context.SaveChangesAsync();

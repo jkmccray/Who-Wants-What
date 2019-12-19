@@ -216,9 +216,7 @@ namespace WhoWantsWhat.Controllers
                 Groups = await _context.Groups
                     .Include(g => g.GroupUsers)
                     .Include(g => g.GroupWishLists)
-                    .Where(g => g.GroupUsers.Any(gu => gu.User == user))
-                    .Where(g => !g.GroupWishLists.Any(gwl => gwl.WishListId == id))
-                    //.Except(groupsAlreadySharedWith)
+                    .Where(g => g.GroupUsers.Any(gu => gu.User == user && gu.Joined) && !g.GroupWishLists.Any(gwl => gwl.WishListId == id))
                     .ToListAsync()
             };
 

@@ -4,11 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>My Gift Idea Lists</h1>
+<div class="form-inline">
+    <h1 class="col-lg-6 col-md-7">My Gift Idea Lists</h1>
+    <div class="col-lg-6 col-md-5 text-right">
+        <a class="btn btn-primary" asp-action="Create">Create New Gift List</a>
+    </div>
+</div>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Create New Gift List</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -56,7 +58,7 @@
                 @Html.DisplayFor(modelItem => item.Budget)
             </td>
             <td>
-                <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.GiftListId">Delete</a>
+                <a class="btn btn-outline-primary pt-2 pb-2 pr-3 pl-3 mb-2" asp-action="Delete" asp-route-id="@item.GiftListId">Delete</a>
             </td>
         </tr>
 }

@@ -10592,7 +10592,7 @@ th {
 
 .table th,
 .table td {
-  padding: 1.5rem;
+  /*padding: 1.5rem;*/
 }
 
 .table-sm th,
