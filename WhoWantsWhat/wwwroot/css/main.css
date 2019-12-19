@@ -9,6 +9,20 @@
 
 .font1 {
     font-family: 'Nixie One', cursive;
+    letter-spacing: 2px;
+}
+
+.no-caps {
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.default-cursor {
+    cursor: default;
+}
+
+.text-left {
+    text-align: left;
 }
 
 /*---------------- Login page ----------------*/
@@ -41,32 +55,113 @@
     background-color: #CDABAA;
     height: 30em;
     margin-bottom: 1em;
+    max-width: 355px;
 }
 
 .group-card.first {
     margin-left: 0;
 }
 
-.group-card-header {
-    text-transform: none;
+.group-members {
+    overflow-y: auto;
+    max-height: 272px;
 }
 
-/* Sticky footer styles
+.btn-create-new-group,
+.btn-create-new-group:after {
+    content: "Create New Group";
+}
+
+@media (max-width: 1000px) {
+    .group-list {
+        grid-template-columns: repeat(2, 48% [col-start]);
+        margin: 1em 0;
+    }
+
+}
+
+@media (max-width: 775px) {
+    .group-list {
+        grid-template-columns: repeat(1, 100% [col-start]);
+        justify-items: center;
+        margin: 1em 0;
+    }
+    .btn-create-new-group,
+    .btn-create-new-group:after {
+        content: "Create";
+    }
+    .search-box-and-create-button {
+        flex-direction: column-reverse;
+    }
+    .form-control {
+        width: 70%;
+    }
+}
+
+/*------------------Wish Lists--------------------*/
+@media (max-width: 900px) {
+    .wish-list-index-header {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.wish-list-items-group {
+    display: grid;
+    grid-template-columns: repeat(4, 24% [col-start]);
+    justify-content: space-between;
+}
+
+.wish-list-item-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.wish-list-item-card-bottom {
+}
+
+.wish-list-item-btn-container {
+    margin: 0 auto;
+}
+
+.btn-width-100 {
+    width: 100%
+}
+
+@media (max-width: 1000px) {
+    .wish-list-items-group {
+        grid-template-columns: repeat(3, 32% [col-start]);
+    }
+}
+
+@media (max-width: 775px) {
+    .wish-list-items-group {
+        grid-template-columns: repeat(2, 48% [col-start]);
+    }
+}
+
+@media (max-width: 400px) {
+    .wish-list-items-group {
+        grid-template-columns: repeat(1, 100% [col-start]);
+    }
+}
+
+    /* Sticky footer styles
 -------------------------------------------------- */
-html {
-    position: relative;
-    min-height: 100%;
-}
+    html {
+        position: relative;
+        min-height: 100%;
+    }
 
-body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
-}
+    body {
+        /* Margin bottom by footer height */
+        margin-bottom: 60px;
+    }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
-}
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        white-space: nowrap;
+        line-height: 60px; /* Vertically center the text there */
+    }

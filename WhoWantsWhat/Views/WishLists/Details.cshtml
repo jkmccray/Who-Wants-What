@@ -17,6 +17,8 @@
         <input type="hidden" asp-for="WishListId" />
         <input class="btn btn-primary" type="submit" value="Add Item To Wish List" />
     </form>
+    <a class="btn btn-primary"
+       asp-action="ShareWishListView" asp-controller="WishLists" asp-route-id="@Model.WishListId">Share</a>
 }
 
 
@@ -24,11 +26,12 @@
     <hr />
     @if (Model.GroupWishLists.Count > 0)
     {
-        <div>Shared With Groups:
-            <ul>
-                @foreach(var gwl in Model.GroupWishLists)
+        <div>
+            Shared With Groups:
+            <ul class="list-group-horizontal">
+                @foreach (var gwl in Model.GroupWishLists)
                 {
-                <li>@gwl.Group.Name</li>
+                    <li class="">@gwl.Group.Name</li>
                 }
             </ul>
         </div>
@@ -43,69 +46,78 @@
 
     @if (Model.WishListItems != null)
     {
-        <table class="table table-hover">
-            <tbody>
-                @foreach (var wi in Model.WishListItems)
+        <div class="wish-list-items-group">
+            @foreach (var wi in Model.WishListItems)
+            {
+                var Item = wi.Item;
+                var ItemId = wi.Item.ItemId;
+                var WishListItemId = wi.WishListItemId;
+                var UserId = wi.WishList.UserId;
+                var textClass = "";
+                if (wi.Item.Purchased)
                 {
-                    var Item = wi.Item;
-                    var ItemId = wi.Item.ItemId;
-                    var WishListItemId = wi.WishListItemId;
-                    var UserId = wi.WishList.UserId;
-                    var textClass = "";
-                    if (wi.Item.Purchased)
-                    {
-                        textClass = "text-success";
-                    }
-                <tr>
-                    <td>
-                        @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
-                    </td>
-                    <td>
-                        <div class="custom-control custom-checkbox">
-                            <input disabled class="custom-control-input" type="checkbox" asp-for="@wi.Item.Purchased" />
-                            <label class="custom-control-label @textClass" asp-for="@wi.Item.Purchased"></label>
-                        </div>
-                    </td>
-                    <td>
-                        @if (!wi.Item.Purchased && Model.UserId != UserManager.GetUserId(User))
-                        {
-                            <form class="form-inline">
-                                <input type="hidden" asp-for="@ItemId" />
-                                <input type="hidden" asp-for="WishListId" />
-                                <input class="btn btn-outline-primary" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
-                            </form>
-                            <form class="form-inline">
-                                <input type="hidden" asp-for="@Item.ItemId" />
-                                <input type="hidden" asp-for="@UserId" />
-                                <input type="hidden" asp-for="WishListId" />
-                                <input class="btn btn-outline-primary" type="submit" value="Add to Gift List" asp-action="AddItemToGiftList" asp-controller="Items" />
-                            </form>
-                        }
-                    </td>
-                    <td>
-                        @if (Model.UserId == UserManager.GetUserId(User))
-                        {
-                            <form>
-                                <input type="hidden" asp-for="@ItemId" />
-                                <input class="btn btn-outline-primary" type="submit" value="Add to Another Wish List" asp-action="AddExistingItemToWishList" asp-controller="Items" />
-                            </form>
-                            <form>
-                                <input type="hidden" asp-for="@Item.ItemId" />
-                                <input type="hidden" asp-for="@WishListItemId" />
-                                <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
-                            </form>
-                        }
-
-                    </td>
-                </tr>
+                    textClass = "text-success";
                 }
-            </tbody>
-        </table>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
+                        </h4>
+                        <hr />
+                        <div class="wish-list-item-card">
+
+                            <p class="card-text mt-4 mb-4">@wi.Notes</p>
+                            @if (wi.Item.Link != null)
+                            {
+                                <a target="_blank" href="@wi.Item.Link" class="card-link mb-2">Link to item</a>
+                            }
+                            <div class="wish-list-item-card-bottom">
+                                <div class="custom-control custom-checkbox mt-4 mb-4">
+                                    <input disabled class="custom-control-input" type="checkbox" asp-for="@wi.Item.Purchased" />
+                                    <label class="custom-control-label @textClass" asp-for="@wi.Item.Purchased"></label>
+                                </div>
+                                <div class="form-inline mt-4 mb-4 text-center">
+                                    @if (!wi.Item.Purchased && Model.UserId != UserManager.GetUserId(User))
+                                    {
+                                        <form>
+                                            <input type="hidden" asp-for="@ItemId" />
+                                            <input type="hidden" asp-for="WishListId" />
+                                            <input class="btn btn-outline-primary mr-3 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
+                                        </form>
+                                        <form>
+                                            <input type="hidden" asp-for="@Item.ItemId" />
+                                            <input type="hidden" asp-for="@UserId" />
+                                            <input type="hidden" asp-for="WishListId" />
+                                            <input class="btn btn-outline-primary pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Add to Gift List" asp-action="AddItemToGiftList" asp-controller="Items" />
+                                        </form>
+                                    }
+                                    <div class=wish-list-item-btn-container>
+                                        @if (Model.UserId == UserManager.GetUserId(User))
+                                        {
+                                            <form>
+                                                <input type="hidden" asp-for="@ItemId" />
+                                                <input class="btn btn-outline-primary btn-width-100 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Add to a Wish List" asp-action="AddExistingItemToWishList" asp-controller="Items" />
+                                            </form>
+                                            <form>
+                                                <input type="hidden" asp-for="@Item.ItemId" />
+                                                <input type="hidden" asp-for="@WishListItemId" />
+                                                <input class="btn btn-outline-primary btn-width-100 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
+                                            </form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
 </div>
 @if (Model.UserId == UserManager.GetUserId(User))
 {
-    <div>
+    <div class="mt-4 mb-4">
         <a asp-action="Edit" asp-route-id="@Model.WishListId">Edit</a> |
         <a asp-action="Index">Back to My Wish Lists</a>
     </div>

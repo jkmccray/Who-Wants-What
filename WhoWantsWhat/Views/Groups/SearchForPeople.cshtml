@@ -4,7 +4,7 @@
     ViewData["Title"] = "SearchForPeople";
 }
 
-<h1>Search for People to Add to @Model.Group.Name</h1>
+<h1 class="no-caps mt-4">Search for People to Add to @Model.Group.Name</h1>
 
 <form asp-action="SearchForPeople" class="form-inline my-2 my-lg-0">
     <input type="hidden" asp-for="GroupId" />
@@ -16,7 +16,7 @@
 {
     <div class="alert alert-dismissible alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <div class="text-success mt-2 mb-2">    @TempData["SuccessMessage"] </div>
+        <div class="text-success mt-2 mb-2">@TempData["SuccessMessage"] </div>
     </div>
 }
 
@@ -50,7 +50,7 @@
                             <input label="GroupId" type="hidden" asp-for="GroupId" />
                             <input label="SearchText" type="hidden" asp-for="SearchText" />
                             <input label="UserId" type="hidden" asp-for="@UserId" />
-                            <input type="submit" value="Add to @Model.Group.Name Group" class="btn btn-primary" />
+                            <input type="submit" value="Add" class="btn btn-primary" />
                         </form>
                     </td>
                 </tr>
