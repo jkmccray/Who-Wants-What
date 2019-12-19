@@ -21,34 +21,29 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-    var ItemId = item.ItemId;
-        <tr>
-            <td>
-                @Html.ActionLink(item.Name.ToString(), "Details", new { id = item.ItemId })
-            </td>
-            <td>
-                @if (item.Link != null)
-                {
-                    <a target="_blank" href="@item.Link">Link</a>
-                }
-            </td>
-            <td>
-                <div class="custom-control custom-checkbox">
-                    <input disabled class="custom-control-input" type="checkbox" asp-for="@item.Purchased" />
-                    <label class="custom-control-label" asp-for="@item.Purchased"></label>
-                </div>
-            </td>
-            <td>
-                <form>
-                    <input type="hidden" asp-for="@ItemId" />
-                    <input class="btn btn-outline-primary" type="submit" value="Add to Another Wish List" asp-action="AddExistingItemToWishList" asp-controller="Items" />
-                </form>
-            </td>
-            <td>
-                <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.ItemId">Delete Item</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            var ItemId = item.ItemId;
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name.ToString(), "Details", new { id = item.ItemId })
+                </td>
+                <td>
+                    @if (item.Link != null)
+                    {
+                        <a target="_blank" href="@item.Link">Link</a>
+                    }
+                </td>
+                <td>
+                    <div class="custom-control custom-checkbox">
+                        <input disabled class="custom-control-input" type="checkbox" asp-for="@item.Purchased" />
+                        <label class="custom-control-label" asp-for="@item.Purchased"></label>
+                    </div>
+                </td>
+                <td>
+                    <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.ItemId">Delete Item</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

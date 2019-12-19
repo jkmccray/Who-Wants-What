@@ -2828,11 +2828,12 @@ fieldset:disabled a.btn {
           box-shadow: 0 0 0 0.2rem rgba(221, 221, 221, 0.5);
 }
 
-.btn-secondary.disabled, .btn-secondary:disabled {
-  color: #1a1a1a;
-  background-color: #fff;
-  border-color: #fff;
-}
+    .btn-secondary.disabled, .btn-secondary:disabled {
+        color: #1a1a1a;
+        background-color: #fff;
+        border-color: #fff;
+        cursor: default;
+    }
 
 .btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active,
 .show > .btn-secondary.dropdown-toggle {
@@ -5657,13 +5658,12 @@ a.badge-dark:focus, a.badge-dark.focus {
       -ms-flex-direction: column;
           flex-direction: column;
   padding-left: 0;
-  margin-bottom: 0;
 }
 
 .list-group-item-action {
   width: 100%;
   color: #55595c;
-  text-align: inherit;
+  text-align: left;
 }
 
 .list-group-item-action:hover, .list-group-item-action:focus {
@@ -5679,11 +5679,12 @@ a.badge-dark:focus, a.badge-dark.focus {
 }
 
 .list-group-item {
-  position: relative;
-  display: block;
-  padding: 0.75rem 1.25rem;
-  background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+    position: relative;
+    min-width: 295px;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .list-group-item.disabled, .list-group-item:disabled {
@@ -10591,7 +10592,7 @@ th {
 
 .table th,
 .table td {
-  padding: 1.5rem;
+  /*padding: 1.5rem;*/
 }
 
 .table-sm th,

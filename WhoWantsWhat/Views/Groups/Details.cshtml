@@ -9,10 +9,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>@Model.Name Group</h1>
+<h1 class="no-caps mt-2">@Model.Name</h1>
 
 <div>
-    <h4>Group Members:</h4>
+    <h5 class="mt-4">Members:</h5>
     @if (TempData["ErrorMessage"] != null)
 
     {
@@ -21,10 +21,10 @@
             <div class="text-danger mt-2 mb-2">    @TempData["ErrorMessage"] </div>
         </div>
     }
-    <ul>
+    <ul class="list-group col-8">
         @foreach (var u in Model.GroupUsers.Where(gu => gu.Joined))
         {
-            <li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
                 @if (u.UserId != UserManager.GetUserId(User))
                 {
                     var UserId = u.UserId;
@@ -44,14 +44,16 @@
 </div>
 @if (Model.GroupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User)))
 {
-    <form asp-action="AddPeopleToGroup" asp-controller="Groups">
-        <input type="hidden" asp-for="GroupId" />
-        <input type="submit" value="Add People to Group" class="btn btn-primary" />
-    </form>
-    <form asp-action="LeaveGroup" asp-controller="Groups">
-        <input type="hidden" asp-for="GroupId" />
-        <input type="submit" value="Leave Group" class="btn btn-primary mt-2" />
-    </form>
+    <div class="form-inline mt-4">
+        <form asp-action="AddPeopleToGroup" asp-controller="Groups">
+            <input type="hidden" asp-for="GroupId" />
+            <input type="submit" value="Add People to Group" class="btn btn-primary" />
+        </form>
+        <form asp-action="LeaveGroup" asp-controller="Groups">
+            <input type="hidden" asp-for="GroupId" />
+            <input type="submit" value="Leave Group" class="btn btn-primary ml-2" />
+        </form>
+    </div>
 }
 
 @if (Model.GroupUsers.Where(gu => !gu.Joined).Count() > 0)

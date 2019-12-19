@@ -4,48 +4,58 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>@Model.Name</h1>
+<div class="form-inline">
+    <h1 class="col-lg-6">@Model.Name</h1>
+    <form class="col-lg-6 text-right" asp-action="CreateItem" asp-controller="Items">
+        <input type="hidden" asp-for="GiftListId" />
+        <input class="btn btn-primary" type="submit" value="Add Item To Gift List" />
+    </form>
+</div>
 
-<form asp-action="CreateItem" asp-controller="Items">
-    <input type="hidden" asp-for="GiftListId" />
-    <input class="btn btn-primary" type="submit" value="Add Item To Gift List" />
-</form>
 
 <div>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Receiver)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.ReceiverId != null)
-            {
-                <span>@Model.Receiver.FirstName @Model.Receiver.LastName</span>
-            }
-            else
-            {
-                @Html.DisplayFor(model => model.ReceiverName)
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ListTypeId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ListType.Label)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DateNeeded)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DateNeeded)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Budget)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Budget)
-        </dd>
-    </dl>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">For</th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.ListTypeId)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.DateNeeded)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Budget)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-active">
+                <th scope="col">For</th>
+
+                <td>
+                    @if (Model.ReceiverId != null)
+                    {
+                        <span>@Model.Receiver.FirstName @Model.Receiver.LastName</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(model => model.ReceiverName)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.ListType.Label)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.DateNeeded)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Budget)
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.GiftListId">Edit</a> |
@@ -67,34 +77,34 @@
                     {
                         textClass = "text-success";
                     }
-                <tr>
-                    <td>
-                        @Html.ActionLink(gi.Item.Name.ToString(), "Details", "Items", new { id = gi.ItemId, giftListItemId = gi.GiftListItemId })
-                    </td>
-                    <td>
-                        <div class="custom-control custom-checkbox">
-                            <input disabled class="custom-control-input" type="checkbox" asp-for="@gi.Item.Purchased" />
-                            <label class="custom-control-label @textClass" asp-for="@gi.Item.Purchased"></label>
-                        </div>
-                    </td>
-                    <td>
-                        @if(!gi.Item.Purchased)
-                        {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(gi.Item.Name.ToString(), "Details", "Items", new { id = gi.ItemId, giftListItemId = gi.GiftListItemId })
+                        </td>
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <input disabled class="custom-control-input" type="checkbox" asp-for="@gi.Item.Purchased" />
+                                <label class="custom-control-label @textClass" asp-for="@gi.Item.Purchased"></label>
+                            </div>
+                        </td>
+                        <td>
+                            @if (!gi.Item.Purchased)
+                            {
+                                <form>
+                                    <input type="hidden" asp-for="@ItemId" />
+                                    <input type="hidden" asp-for="GiftListId" />
+                                    <input class="btn btn-outline-primary" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
+                                </form>
+                            }
+                        </td>
+                        <td>
                             <form>
-                                <input type="hidden" asp-for="@ItemId" />
-                                <input type="hidden" asp-for="GiftListId" />
-                                <input class="btn btn-outline-primary" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
+                                <input type="hidden" asp-for="@Item.ItemId" />
+                                <input type="hidden" asp-for="@GiftListItemId" />
+                                <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
                             </form>
-                        }
-                    </td>
-                    <td>
-                        <form>
-                            <input type="hidden" asp-for="@Item.ItemId" />
-                            <input type="hidden" asp-for="@GiftListItemId" />
-                            <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
-                        </form>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
