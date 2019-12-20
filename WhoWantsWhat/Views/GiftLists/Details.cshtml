@@ -12,7 +12,6 @@
     </form>
 </div>
 
-
 <div>
     <hr />
     <table class="table table-hover">
@@ -27,6 +26,12 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Budget)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AmountSpent)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Difference)
                 </th>
             </tr>
         </thead>
@@ -51,6 +56,19 @@
                 <td>
                     @Html.DisplayFor(model => model.Budget)
                 </td>
+                <td>
+                    @Html.DisplayFor(model => model.AmountSpent)
+                </td>
+                @{ 
+                    var textColor = "";
+                    if (Model.Difference < 0)
+                    {
+                        textColor = "text-danger";
+                    }
+                    <td class="@textColor">
+                        @Html.DisplayFor(model => model.Difference)
+                    </td>
+                }
             </tr>
         </tbody>
     </table>
