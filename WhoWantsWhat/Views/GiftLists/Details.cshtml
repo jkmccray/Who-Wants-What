@@ -59,7 +59,7 @@
                 <td>
                     @Html.DisplayFor(model => model.AmountSpent)
                 </td>
-                @{ 
+                @{
                     var textColor = "";
                     if (Model.Difference < 0)
                     {
@@ -81,48 +81,57 @@
     <hr />
     @if (Model.GiftListItems != null)
     {
-        <table class="table table-hover">
-            <tbody>
-                @foreach (var gi in Model.GiftListItems)
+        <div class="wish-list-items-group">
+            @foreach (var gi in Model.GiftListItems)
+            {
+                var Item = gi.Item;
+                var ItemId = gi.Item.ItemId;
+                var GiftListItemId = gi.GiftListItemId;
+                var textClass = "";
+                if (gi.Item.Purchased)
                 {
-                    var Item = gi.Item;
-                    var ItemId = gi.Item.ItemId;
-                    var GiftListItemId = gi.GiftListItemId;
-                    var textClass = "";
-                    if (gi.Item.Purchased)
-                    {
-                        textClass = "text-success";
-                    }
-                    <tr>
-                        <td>
-                            @Html.ActionLink(gi.Item.Name.ToString(), "Details", "Items", new { id = gi.ItemId, giftListItemId = gi.GiftListItemId })
-                        </td>
-                        <td>
-                            <div class="custom-control custom-checkbox">
-                                <input disabled class="custom-control-input" type="checkbox" asp-for="@gi.Item.Purchased" />
-                                <label class="custom-control-label @textClass" asp-for="@gi.Item.Purchased"></label>
-                            </div>
-                        </td>
-                        <td>
-                            @if (!gi.Item.Purchased)
-                            {
-                                <form>
-                                    <input type="hidden" asp-for="@ItemId" />
-                                    <input type="hidden" asp-for="GiftListId" />
-                                    <input class="btn btn-outline-primary" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
-                                </form>
-                            }
-                        </td>
-                        <td>
-                            <form>
-                                <input type="hidden" asp-for="@Item.ItemId" />
-                                <input type="hidden" asp-for="@GiftListItemId" />
-                                <input class="btn btn-outline-primary" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
-                            </form>
-                        </td>
-                    </tr>
+                    textClass = "text-success";
                 }
-            </tbody>
-        </table>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            @Html.ActionLink(gi.Item.Name.ToString(), "Details", "Items", new { id = gi.ItemId, giftListItemId = gi.GiftListItemId })
+                        </h4>
+                        <hr />
+                        <div class="wish-list-item-card">
+                            <p class="card-text mt-4 mb-4">@gi.Notes</p>
+                            @if (gi.Item.Link != null)
+                            {
+                                <a target="_blank" href="@gi.Item.Link" class="card-link mb-2">Link to item</a>
+                            }
+                            <div class="wish-list-item-card-bottom">
+                                <div class="custom-control custom-checkbox mt-4 mb-4">
+                                    <input disabled class="custom-control-input" type="checkbox" asp-for="@gi.Item.Purchased" />
+                                    <label class="custom-control-label @textClass" asp-for="@gi.Item.Purchased"></label>
+                                </div>
+                                @if (!gi.Item.Purchased)
+                                {
+                                    <form class="btn-width-100">
+                                        <input type="hidden" asp-for="@ItemId" />
+                                        <input type="hidden" asp-for="GiftListId" />
+                                        <input class="btn btn-outline-primary btn-width-100 mr-3 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
+                                    </form>
+                                }
+                                <form class="btn-width-100">
+                                    <input type="hidden" asp-for="@Item.ItemId" />
+                                    <input type="hidden" asp-for="@GiftListItemId" />
+                                    <input class="btn btn-outline-primary btn-width-100 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+
+
     }
 </div>
