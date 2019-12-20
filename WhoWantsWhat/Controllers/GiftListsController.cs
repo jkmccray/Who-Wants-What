@@ -53,6 +53,9 @@ namespace WhoWantsWhat.Controllers
                 return NotFound();
             }
 
+            giftList.AmountSpent = giftList.GiftListItems.Select(gli => gli.Item.PurchasedAmount).Sum();
+            giftList.Difference = (double)giftList.Budget - giftList.AmountSpent;
+
             return View(giftList);
         }
 

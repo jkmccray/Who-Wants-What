@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,5 +30,13 @@ namespace WhoWantsWhat.Models
         [DisplayFormat(DataFormatString = "{0:C}")]
         public int Budget { get; set; }
         public ICollection<GiftListItem> GiftListItems { get; set; }
+        [NotMapped]
+        [Display(Name="Amount Spent")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
+        public double AmountSpent { get; set; }
+        [NotMapped]
+        [Display(Name="Amount Left")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
+        public double Difference { get; set; }
     }
 }
