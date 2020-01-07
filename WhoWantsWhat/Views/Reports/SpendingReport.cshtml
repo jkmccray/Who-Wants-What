@@ -1,0 +1,63 @@
+﻿@model WhoWantsWhat.Models.ViewModels.ReportsViewModels.BudgetReportViewModel
+
+@{
+    ViewData["Title"] = "SpendingReport";
+}
+
+<h1>Spending Report: @Model.ListType.Label</h1>
+
+<h4 class="no-caps">@Html.DisplayNameFor(model => model.TotalAmountSpent): @Html.DisplayFor(model => model.TotalAmountSpent)</h4>
+
+<h4 class="no-caps">@Html.DisplayNameFor(model => model.TotalBudget): @Html.DisplayFor(model => model.TotalBudget)</h4>
+
+
+<div class="text-center">
+    <canvas id="myChart" style="max-width:800px"></canvas>
+</div>
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/js/mdb.min.js"></script>
+
+<script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+    @{
+         var chartLabels = Html.Raw(Json.Serialize(Model.GiftLists.Select(gl => gl.Name).ToList()));
+         var chartDataSpent = Html.Raw(Json.Serialize(Model.GiftLists.Select(gl => gl.AmountSpent).ToList()));
+         var chartDataBudget = Html.Raw(Json.Serialize(Model.GiftLists.Select(gl => gl.Budget).ToList()));
+    }
+    var chartLabels = JSON.parse('@chartLabels');
+    var chartDataSpent = JSON.parse('@chartDataSpent');
+    var chartDataBudget = JSON.parse('@chartDataBudget');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: chartLabels,
+            datasets:
+            [{
+                label: 'Spent Amount',
+                data: chartDataSpent,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)'
+            },
+            {
+                label: 'Budgeted Amount',
+                data: chartDataBudget,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>

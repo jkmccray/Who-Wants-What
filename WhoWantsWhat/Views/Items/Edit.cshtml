@@ -27,6 +27,10 @@
                 <span asp-validation-for="Item.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Item.Description" class="control-label"></label>
+                <input asp-for="Item.Description" class="form-control" />
+            </div>
+            <div class="form-group">
                 <label asp-for="Item.Link" class="control-label"></label>
                 <input asp-for="Item.Link" class="form-control" />
                 <span asp-validation-for="Item.Link" class="text-danger"></span>

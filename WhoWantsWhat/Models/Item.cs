@@ -12,6 +12,7 @@ namespace WhoWantsWhat.Models
         public int ItemId { get; set; }
         [Required]
         public string Name { get; set; }
+        public string Description { get; set; }
         [Required]
         public string CreatorId { get; set; }
         public ApplicationUser Creator { get; set; }

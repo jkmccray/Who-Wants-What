@@ -1,0 +1,18 @@
+﻿@model WhoWantsWhat.Models.ViewModels.ReportsViewModels.ListTypeViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form asp-action="SpendingReport" asp-controller="Reports">
+    <div class="form-group">
+        <label asp-for="ListTypeId" class="control-label">Report Category</label>
+        <select asp-for="ListTypeId" class="form-control" asp-items="@Model.ListTypeOptions"></select>
+        <span asp-validation-for="ListTypeId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
