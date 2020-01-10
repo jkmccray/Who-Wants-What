@@ -75,7 +75,7 @@
             }
             else if (!groupUsers.FirstOrDefault(gu => gu.UserId == UserManager.GetUserId(User)).Joined)
             {
-                <button disabled class="btn btn-secondary disabled mt-3">Requested to Join</button>
+                <button disabled class="btn btn-outline-primary disabled mt-3" style="cursor: default">Requested to Join</button>
             }
         </div>
     </div>

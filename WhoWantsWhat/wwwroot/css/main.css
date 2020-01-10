@@ -28,6 +28,11 @@
 .text-right {
     text-align: right;
 }
+
+.vert-align-middle {
+    vertical-align: middle;
+}
+
 /*---------------- Login page ----------------*/
 .logo-section {
     /*display: flex;*/
@@ -111,6 +116,10 @@
         display: flex;
         flex-direction: column;
     }
+}
+
+.list-icon {
+    width: 1em;
 }
 
 .wish-list-items-group {
