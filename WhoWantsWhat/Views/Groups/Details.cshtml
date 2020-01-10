@@ -24,21 +24,22 @@
     <ul class="list-group col-8">
         @foreach (var u in Model.GroupUsers.Where(gu => gu.Joined))
         {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                @if (u.UserId != UserManager.GetUserId(User))
-                {
-                    var UserId = u.UserId;
-                    <form>
-                        <input type="hidden" asp-for="@UserId" />
-                        <input type="hidden" asp-for="GroupId" />
-                        <button class="btn btn-link" asp-action="Index" asp-controller="WishLists">@u.User.FirstName @u.User.LastName</button>
-                    </form>
-                }
-                else
-                {
-                    <span disabled class="btn btn-link">@u.User.FirstName @u.User.LastName</span>
-                }
-            </li>
+        <li class="list-group-item d-flex align-items-center pt-0 pb-0 pl-1">
+            <img class="group-member-icon ml-2" src="~/images/member-icon.png" alt="Member Icon" />
+            @if (u.UserId != UserManager.GetUserId(User))
+            {
+                var UserId = u.UserId;
+                <form>
+                    <input type="hidden" asp-for="@UserId" />
+                    <input type="hidden" asp-for="GroupId" />
+                    <button class="btn btn-link pt-2 pb-2 pl-3" asp-action="Index" asp-controller="WishLists">@u.User.FirstName @u.User.LastName</button>
+                </form>
+            }
+            else
+            {
+                <span disabled class="btn btn-link pt-2 pb-2 pl-3">@u.User.FirstName @u.User.LastName</span>
+            }
+        </li>
         }
     </ul>
 </div>

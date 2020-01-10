@@ -55,7 +55,7 @@
 }
 
 .group-card {
-    background-color: #CDABAA;
+    /*background-color: #CDABAA;*/
     height: 30em;
     margin-bottom: 1em;
     max-width: 355px;
@@ -68,6 +68,10 @@
 .group-members {
     overflow-y: auto;
     max-height: 272px;
+}
+
+.group-member-icon {
+    width: 1em;
 }
 
 .btn-create-new-group,
