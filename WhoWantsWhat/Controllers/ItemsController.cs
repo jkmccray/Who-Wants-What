@@ -343,6 +343,7 @@ namespace WhoWantsWhat.Controllers
             var viewModel = new AddExistingItemToWishListViewModel
             {
                 ItemId = ItemId,
+                Item = await _context.Items.FindAsync(ItemId),
                 WishLists = await _context.WishLists
                     .Include(wl => wl.User)
                     .Where(wl => wl.User == user)

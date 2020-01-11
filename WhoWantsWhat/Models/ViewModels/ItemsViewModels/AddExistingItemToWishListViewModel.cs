@@ -10,6 +10,7 @@ namespace WhoWantsWhat.Models.ViewModels.ItemsViewModels
     {
         public int WishListId { get; set; }
         public int ItemId { get; set; }
+        public Item Item { get; set; }
         public List<WishList> WishLists { get; set; } = new List<WishList>();
         public List<SelectListItem> WishListOptions
         {

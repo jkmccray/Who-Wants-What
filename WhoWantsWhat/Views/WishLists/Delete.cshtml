@@ -25,6 +25,7 @@
                     var WishListItemId = wi.WishListItemId;
                     <tr>
                         <td>
+                            <img class="gift-icon ml-2 mr-3 mb-1" src="~/images/gift-icon.png" alt="List Icon" />
                             @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
                         </td>
                         <td>

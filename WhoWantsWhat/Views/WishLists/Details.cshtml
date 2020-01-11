@@ -28,11 +28,14 @@
     @if (Model.GroupWishLists.Count > 0)
     {
         <div>
-            Shared With Groups:
-            <ul class="list-group-horizontal">
+            <h5>Shared With Groups:</h5>
+            <ul class="list-group mb-3">
                 @foreach (var gwl in Model.GroupWishLists)
                 {
-                    <li class="">@gwl.Group.Name</li>
+                    <li class="list-group-item flex-fill d-flex align-items-center pl-1 shared-group-li">
+                        <img class="group-icon ml-2 mr-3" src="~/images/group-icon.png" alt="Group Icon" />
+                        @gwl.Group.Name
+                    </li>
                 }
             </ul>
         </div>
@@ -41,7 +44,7 @@
     {
         <div class="alert alert-dismissible alert-success">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <div class="text-success mt-2 mb-2">    @TempData["SuccessMessage"] </div>
+            <div class="text-success mt-2 mb-2">@TempData["SuccessMessage"]</div>
         </div>
     }
 
@@ -75,7 +78,8 @@
                             }
                             @if (wi.Item.Link != null)
                             {
-                                <a target="_blank" href="@wi.Item.Link" class="card-link mb-2">Link to item</a>
+                                // apply transform style to a tag so that the link is stretched over the a tag only
+                                <a target="_blank" href="@wi.Item.Link" class="stretched-link mb-2" style="transform: rotate(0);">Link to item</a>
                             }
                             <div class="wish-list-item-card-bottom">
                                 <div class="custom-control custom-checkbox mt-4 mb-4">
@@ -85,11 +89,6 @@
                                 <div class="form-inline mt-4 mb-4 text-center">
                                     @if (!wi.Item.Purchased && Model.UserId != UserManager.GetUserId(User))
                                     {
-                                        @*<form class="btn-width-100">
-                                                <input type="hidden" asp-for="@ItemId" />
-                                                <input type="hidden" asp-for="WishListId" />
-                                                <input class="btn btn-outline-primary btn-width-100 mr-3 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
-                                            </form>*@
                                         <form class="btn-width-100">
                                             <input type="hidden" asp-for="@Item.ItemId" />
                                             <input type="hidden" asp-for="@UserId" />
@@ -98,7 +97,7 @@
                                         </form>
                                     }
                                     <div class="wish-list-item-btn-container">
-                                        @if (Model.UserId == UserManager.GetUserId(User))
+                                        @if (Model.UserId == UserManager.GetUserId(User) && !wi.Item.Purchased)
                                         {
                                             <form>
                                                 <input type="hidden" asp-for="@ItemId" />
