@@ -144,6 +144,15 @@
     width: 100%
 }
 
+.share-list-select-form {
+    display: flex;
+}
+
+.share-list-select {
+    width: 35%;
+}
+
+
 @media (max-width: 1000px) {
     .wish-list-items-group {
         grid-template-columns: repeat(3, 32% [col-start]);
@@ -162,12 +171,17 @@
     }
 }
 
-    /* Sticky footer styles
+/* -------------------- Items ---------------------- */
+.item-description {
+    min-height: 42px;
+}
+
+/* Sticky footer styles
 -------------------------------------------------- */
-    html {
-        position: relative;
-        min-height: 100%;
-    }
+html {
+    position: relative;
+    min-height: 100%;
+}
 
     body {
         /* Margin bottom by footer height */
