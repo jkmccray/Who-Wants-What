@@ -14,7 +14,7 @@
 
 <div>
     <hr />
-    <table class="table table-hover">
+    <table class="table mb-0">
         <thead>
             <tr>
                 <th scope="col">For</th>
@@ -36,7 +36,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="table-active">
+            <tr>
                 <td>
                     @if (Model.ReceiverId != null)
                     {
@@ -73,12 +73,8 @@
         </tbody>
     </table>
 </div>
+<hr class="mt-0"/>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.GiftListId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-<div>
-    <hr />
     @if (Model.GiftListItems != null)
     {
         <div class="wish-list-items-group">
@@ -100,10 +96,17 @@
                         </h4>
                         <hr />
                         <div class="wish-list-item-card">
-                            <p class="card-text mt-4 mb-4">@gi.Notes</p>
+                            <h6 class="card-subtitle mt-2 mb-3 item-description">@gi.Item.Description</h6>
+                            @if (gi.Notes != null)
+                            {
+                                <p class="card-text mt-3 mb-1">Notes:</p>
+                                <p class="card-text mt-1 mb-4">@gi.Notes</p>
+                            }
                             @if (gi.Item.Link != null)
                             {
-                                <a target="_blank" href="@gi.Item.Link" class="card-link mb-2">Link to item</a>
+                                // apply transform style to a tag so that the link is stretched over the a tag only
+                                <a target="_blank" href="@gi.Item.Link" class="stretched-link mb-2" style="transform: rotate(0);">Link to item</a>
+
                             }
                             <div class="wish-list-item-card-bottom">
                                 <div class="custom-control custom-checkbox mt-4 mb-4">
@@ -117,12 +120,12 @@
                                         <input type="hidden" asp-for="GiftListId" />
                                         <input class="btn btn-outline-primary btn-width-100 mr-3 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
                                     </form>
+                                    <form class="btn-width-100">
+                                        <input type="hidden" asp-for="@Item.ItemId" />
+                                        <input type="hidden" asp-for="@GiftListItemId" />
+                                        <input class="btn btn-outline-primary btn-width-100 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
+                                    </form>
                                 }
-                                <form class="btn-width-100">
-                                    <input type="hidden" asp-for="@Item.ItemId" />
-                                    <input type="hidden" asp-for="@GiftListItemId" />
-                                    <input class="btn btn-outline-primary btn-width-100 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -134,4 +137,8 @@
 
 
     }
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.GiftListId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
 </div>

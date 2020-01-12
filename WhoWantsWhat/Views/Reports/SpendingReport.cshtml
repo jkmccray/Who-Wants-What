@@ -6,13 +6,33 @@
 
 <h1>Spending Report: @Model.ListType.Label</h1>
 
-<h4 class="no-caps">@Html.DisplayNameFor(model => model.TotalAmountSpent): @Html.DisplayFor(model => model.TotalAmountSpent)</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                <h4 class="no-caps">@Html.DisplayNameFor(model => model.TotalBudget): @Html.DisplayFor(model => model.TotalBudget)</h4>
+            </th>
+            <th scope="col">
+                <h4 class="no-caps">@Html.DisplayNameFor(model => model.TotalAmountSpent): @Html.DisplayFor(model => model.TotalAmountSpent)</h4>
+            </th>
+            <th scope="col">
+                @{
+                    var textColor = "";
+                    if (Model.Difference < 0)
+                    {
+                        textColor = "text-danger";
+                    }
+                    <h4 class="no-caps @textColor">@Html.DisplayNameFor(model => model.Difference): @Html.DisplayFor(model => model.Difference)</h4>
+                }
+            </th>
+        </tr>
+    </thead>
+</table>
 
-<h4 class="no-caps">@Html.DisplayNameFor(model => model.TotalBudget): @Html.DisplayFor(model => model.TotalBudget)</h4>
 
 
 <div class="text-center">
-    <canvas id="myChart" style="max-width:800px"></canvas>
+    <canvas id="myChart"></canvas>
 </div>
 
 <!-- JQuery -->
@@ -55,6 +75,11 @@
                 yAxes: [{
                     ticks: {
                         beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        autoSkip: false
                     }
                 }]
             }

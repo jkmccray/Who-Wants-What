@@ -66,15 +66,15 @@
             {
                 <dt class="col-sm-2"></dt>
                 <dd class="col-sm-10">
-                    <form>
-                        <input type="hidden" asp-for="Item.ItemId" />
-                        <input asp-for="Item.PurchasedAmount" />
-                        <input class="btn btn-outline-primary" type="submit" value="Add Purchase Amount" asp-action="AddPurchaseAmount" />
+                    <form class="d-flex">
+                        <input type="hidden" asp-for="Item.ItemId"/>
+                        <input asp-for="Item.PurchasedAmount" class="form-control add-purchased-amount-input "/>
+                        <input class="btn btn-outline-primary ml-2" type="submit" value="Add Purchase Amount" asp-action="AddPurchaseAmount" />
                     </form>
                 </dd>
             }
         }
-        @if (Model.WishListItemId != null)
+        @if (Model.WishListItemId != null && Model.WishListItem.Notes != null)
         {
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.WishListItem.Notes)
@@ -83,7 +83,7 @@
                 @Html.DisplayFor(model => model.WishListItem.Notes)
             </dd>
         }
-        @if (Model.GiftListItemId != null)
+        @if (Model.GiftListItemId != null && Model.GiftListItem.Notes != null)
         {
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.GiftListItem.Notes)
@@ -95,17 +95,8 @@
 
     </dl>
 </div>
-<div>
-    @if (UserManager.GetUserId(User) == Model.Item.CreatorId)
-    {
-        <form>
-            <input type="hidden" asp-for="Item.ItemId" />
-            <input type="hidden" asp-for="WishListItemId" />
-            <input class="btn btn-primary" type="submit" value="Edit" asp-action="Edit" />
-        </form>
-    }
-</div>
-@if (!Model.Item.Purchased && Model.Item.CreatorId != UserManager.GetUserId(User))
+@if (!Model.Item.Purchased && Model.Item.CreatorId != UserManager.GetUserId(User) 
+    || !Model.Item.Purchased && Model.GiftListItemId != null )
 {
     var ItemId = Model.Item.ItemId;
     <form>
@@ -115,3 +106,15 @@
                asp-action="MarkItemAsPurchased" asp-controller="Items" />
     </form>
 }
+
+<div>
+    @if (UserManager.GetUserId(User) == Model.Item.CreatorId)
+    {
+    <form class="mt-3">
+        <input type="hidden" asp-for="Item.ItemId" />
+        <input type="hidden" asp-for="WishListItemId" />
+        <input type="hidden" asp-for="GiftListItemId" />
+        <input class="btn btn-outline-primary" type="submit" value="Edit" asp-action="Edit" />
+    </form>
+    }
+</div>

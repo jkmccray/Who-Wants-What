@@ -184,7 +184,18 @@
     display: flex;
 }
 
-.add-existing-item-wish-list-select {
+.add-purchased-amount-input {
+    max-width: 15%
+}
+
+/*-------------- Reports --------------*/
+
+.report-select-form {
+    display: flex;
+}
+
+.report-category-select {
+    width: 35%;
 }
 
 /* Sticky footer styles

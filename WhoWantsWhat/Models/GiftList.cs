@@ -16,6 +16,7 @@ namespace WhoWantsWhat.Models
         [Required]
         public string CreatorId { get; set; }
         public ApplicationUser Creator { get; set; }
+        [Display(Name="Recipient Name")]
         public string ReceiverId { get; set; }
         public ApplicationUser Receiver { get; set; }
         public string ReceiverName { get; set; }

@@ -4,15 +4,15 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Reports</h1>
 
-<form asp-action="SpendingReport" asp-controller="Reports">
+<h3>Spending Report:</h3>
+<form asp-action="SpendingReport" asp-controller="Reports" class="report-select-form mt-4">
     <div class="form-group">
-        <label asp-for="ListTypeId" class="control-label">Report Category</label>
         <select asp-for="ListTypeId" class="form-control" asp-items="@Model.ListTypeOptions"></select>
         <span asp-validation-for="ListTypeId" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="form-group ml-3">
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>
 </form>

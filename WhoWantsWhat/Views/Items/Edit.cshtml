@@ -45,7 +45,7 @@
             }
             @if (Model.GiftListItemId > 0 && Model.Item.CreatorId == UserManager.GetUserId(User))
             {
-                // Input for wish list notes
+                // Input for gift list notes
                 <div class="form-group">
                     <label asp-for="GiftListItem.Notes" class="control-label"></label>
                     <input asp-for="GiftListItem.Notes" class="form-control" />
