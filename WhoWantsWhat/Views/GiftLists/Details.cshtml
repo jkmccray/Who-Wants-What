@@ -1,4 +1,9 @@
-﻿@model WhoWantsWhat.Models.GiftList
+﻿@using Microsoft.AspNetCore.Identity
+
+@model WhoWantsWhat.Models.GiftList
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
@@ -73,7 +78,7 @@
         </tbody>
     </table>
 </div>
-<hr class="mt-0"/>
+<hr class="mt-0" />
 <div>
     @if (Model.GiftListItems != null)
     {
@@ -111,11 +116,16 @@
                             <div class="wish-list-item-card-bottom">
                                 <div class="custom-control custom-checkbox mt-4 mb-4">
                                     <input disabled class="custom-control-input" type="checkbox" asp-for="@gi.Item.Purchased" />
-                                    <label class="custom-control-label @textClass" asp-for="@gi.Item.Purchased"></label>
+                                    <label class="custom-control-label @textClass" asp-for="@gi.Item.Purchased">
+                                        @if (gi.Item.PurchaserId != UserManager.GetUserId(User))
+                                        {
+                                            <span>Purchased by others</span>
+                                        }
+                                    </label>
                                 </div>
                                 @if (!gi.Item.Purchased)
                                 {
-                                    <form class="btn-width-100">
+                                    <form class="btn-wiph-100">
                                         <input type="hidden" asp-for="@ItemId" />
                                         <input type="hidden" asp-for="GiftListId" />
                                         <input class="btn btn-outline-primary btn-width-100 mr-3 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="I Purchased This Item" asp-action="MarkItemAsPurchased" asp-controller="Items" />
@@ -125,6 +135,12 @@
                                         <input type="hidden" asp-for="@GiftListItemId" />
                                         <input class="btn btn-outline-primary btn-width-100 pt-2 pb-2 pr-3 pl-3 mb-2" type="submit" value="Remove from List" asp-action="RemoveItemFromList" asp-controller="Items" />
                                     </form>
+                                }
+                                @if (gi.Item.PurchaserId == UserManager.GetUserId(User) && gi.Item.PurchasedAmount > 0)
+                                {
+                                    <p class="card-text mt-3 mb-1">
+                                        Purchased Amount: @Html.DisplayFor(model => gi.Item.PurchasedAmount)
+                                    </p>
                                 }
                             </div>
                         </div>
