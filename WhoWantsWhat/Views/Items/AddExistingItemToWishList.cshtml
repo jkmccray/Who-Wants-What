@@ -4,17 +4,16 @@
     ViewData["Title"] = "AddExistingItemToWishList";
 }
 
-<h1>Select List</h1>
+<h1>Select Wish List for @Model.Item.Name</h1>
 
 
-<form asp-action="SaveExistingItemToWishList">
+<form asp-action="SaveExistingItemToWishList" class="add-existing-item-wish-list-form mt-4">
     <input type="hidden" asp-for="ItemId" />
     <div class="form-group">
-        <label asp-for="WishListId" class="control-label">Wish List</label>
-        <select asp-for="WishListId" class="form-control" asp-items="@Model.WishListOptions"></select>
+        <select asp-for="WishListId" class="form-control add-existing-item-wish-list-select" asp-items="@Model.WishListOptions"></select>
         <span asp-validation-for="WishListId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
+        <input type="submit" value="Save" class="btn btn-primary ml-2" />
     </div>
 </form>

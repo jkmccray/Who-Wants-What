@@ -5,13 +5,14 @@
     ViewData["Title"] = "ShareWishListView";
 }
 
-<h1>@Model.WishList.Name</h1>
+<h1 class="mb-4">@Model.WishList.Name</h1>
 
 <form asp-action="ShareWishList" asp-controller="WishLists">
     <input type="hidden" asp-for="WishListId" />
-    <label asp-for="GroupId" class="control-label">Select Group</label>
-    <select asp-for="GroupId" class="form-control" asp-items="@Model.GroupOptions"></select>
-    <input class="btn btn-primary" type="submit" value="Share List" />
+    <div class="share-list-select-form">
+        <select asp-for="GroupId" class="form-control share-list-select" asp-items="@Model.GroupOptions"></select>
+        <input class="btn btn-primary ml-2" type="submit" value="Share List" />
+    </div>
 </form>
 
 <div>
@@ -26,6 +27,7 @@
                     var WishListItemId = wi.WishListItemId;
                     <tr>
                         <td>
+                            <img class="gift-icon ml-2 mr-3 mb-1" src="~/images/gift-icon.png" alt="List Icon" />
                             @Html.ActionLink(wi.Item.Name.ToString(), "Details", "Items", new { id = wi.ItemId, wishListItemId = wi.WishListItemId })
                         </td>
                         <td>

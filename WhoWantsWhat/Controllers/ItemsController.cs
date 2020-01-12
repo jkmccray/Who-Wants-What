@@ -177,6 +177,8 @@ namespace WhoWantsWhat.Controllers
             var item = viewModel.Item;
 
             ModelState.Remove("Item.CreatorId");
+            ModelState.Remove("GiftListItemId");
+            ModelState.Remove("WishListItemId");
             if (ModelState.IsValid)
             {
                 try
@@ -197,11 +199,11 @@ namespace WhoWantsWhat.Controllers
                     }
                     if (viewModel.GiftListItemId > 0)
                     {
-                        var wishListItem = await _context.GiftListItems.FindAsync(viewModel.GiftListItemId);
-                        wishListItem.Notes = viewModel.WishListItem.Notes;
-                        _context.Update(wishListItem);
+                        var giftListItem = await _context.GiftListItems.FindAsync(viewModel.GiftListItemId);
+                        giftListItem.Notes = viewModel.GiftListItem.Notes;
+                        _context.Update(giftListItem);
                         await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Details), new { id = item.ItemId, giftListItemId = giftListItem.GiftListItemId });
                     }
                 }
                 catch (DbUpdateConcurrencyException)
@@ -215,7 +217,6 @@ namespace WhoWantsWhat.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction(nameof(Index));
             }
             return View(viewModel);
         }
@@ -343,6 +344,7 @@ namespace WhoWantsWhat.Controllers
             var viewModel = new AddExistingItemToWishListViewModel
             {
                 ItemId = ItemId,
+                Item = await _context.Items.FindAsync(ItemId),
                 WishLists = await _context.WishLists
                     .Include(wl => wl.User)
                     .Where(wl => wl.User == user)

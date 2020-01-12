@@ -4,9 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>GiftList</h4>
+<h4>New Gift List</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -25,7 +23,7 @@
             @if (Model.GiftList != null && Model.GiftList.ReceiverId == "0")
             {
                 <div class="form-group">
-                    <label class="text-success" asp-for="GiftList.ReceiverName" class="control-label">Add Receiver Name:</label>
+                    <label class="text-success" asp-for="GiftList.ReceiverName" class="control-label">Add Recipient Name:</label>
                     <input asp-for="GiftList.ReceiverName" class="form-control" />
                     <span asp-validation-for="GiftList.ReceiverName" class="text-danger"></span>
                 </div>

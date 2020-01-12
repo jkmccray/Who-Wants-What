@@ -37,6 +37,8 @@ namespace WhoWantsWhat.Controllers
                 var viewModel = new MyGroupsAndSearchViewModel
                 {
                     Groups = await _context.Groups
+                    .Include(g => g.GroupWishLists)
+                    .ThenInclude(gwl => gwl.WishList)
                     .Include(g => g.GroupUsers)
                     .ThenInclude(gu => gu.User)
                     .Where(g => g.GroupUsers.Any(gu => gu.User == user && gu.Joined))
@@ -70,6 +72,8 @@ namespace WhoWantsWhat.Controllers
             }
 
             var @group = await _context.Groups
+                .Include(g => g.GroupWishLists)
+                .ThenInclude(gwl => gwl.WishList)
                 .Include(g => g.GroupUsers)
                 .ThenInclude(gu => gu.User)
                 .FirstOrDefaultAsync(m => m.GroupId == id);

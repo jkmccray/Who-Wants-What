@@ -28,6 +28,11 @@
 .text-right {
     text-align: right;
 }
+
+.vert-align-middle {
+    vertical-align: middle;
+}
+
 /*---------------- Login page ----------------*/
 .logo-section {
     /*display: flex;*/
@@ -55,7 +60,7 @@
 }
 
 .group-card {
-    background-color: #CDABAA;
+    /*background-color: #CDABAA;*/
     height: 30em;
     margin-bottom: 1em;
     max-width: 355px;
@@ -68,6 +73,10 @@
 .group-members {
     overflow-y: auto;
     max-height: 272px;
+}
+
+.group-member-icon {
+    width: 1em;
 }
 
 .btn-create-new-group,
@@ -109,6 +118,14 @@
     }
 }
 
+.list-icon, .group-icon {
+    width: 1em;
+}
+
+.shared-group-li {
+    max-width: 31%;
+}
+
 .wish-list-items-group {
     display: grid;
     grid-template-columns: repeat(4, 24% [col-start]);
@@ -120,15 +137,20 @@
     flex-direction: column;
 }
 
-.wish-list-item-card-bottom {
-}
-
 .wish-list-item-btn-container {
     margin: 0 auto;
 }
 
 .btn-width-100 {
     width: 100%
+}
+
+.share-list-select-form {
+    display: flex;
+}
+
+.share-list-select {
+    width: 35%;
 }
 
 @media (max-width: 1000px) {
@@ -149,12 +171,39 @@
     }
 }
 
-    /* Sticky footer styles
+/* -------------------- Items ---------------------- */
+.item-description {
+    min-height: 42px;
+}
+
+.gift-icon {
+    width: 1em;
+}
+
+.add-existing-item-wish-list-form {
+    display: flex;
+}
+
+.add-purchased-amount-input {
+    max-width: 15%
+}
+
+/*-------------- Reports --------------*/
+
+.report-select-form {
+    display: flex;
+}
+
+.report-category-select {
+    width: 35%;
+}
+
+/* Sticky footer styles
 -------------------------------------------------- */
-    html {
-        position: relative;
-        min-height: 100%;
-    }
+html {
+    position: relative;
+    min-height: 100%;
+}
 
     body {
         /* Margin bottom by footer height */

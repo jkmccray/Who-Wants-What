@@ -17,7 +17,15 @@ namespace WhoWantsWhat.Models.ViewModels.ReportsViewModels
         public double TotalAmountSpent { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}")]
-        [Display(Name = "Total Budgeted Amount")]
+        [Display(Name = "Total Amount Budgeted")]
         public double TotalBudget { get; set; }
+        [DisplayFormat(DataFormatString = "{0:C}")]
+        public double Difference
+        {
+            get
+            {
+                return TotalBudget - TotalAmountSpent;
+            }
+        }
     }
 }

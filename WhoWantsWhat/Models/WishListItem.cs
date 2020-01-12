@@ -16,7 +16,7 @@ namespace WhoWantsWhat.Models
         [Required]
         public int ItemId { get; set; }
         public Item Item { get; set; }
-        [StringLength(100, ErrorMessage = "Please shorten notes to 100 characters")]
+        [StringLength(28, ErrorMessage = "Please shorten notes to 100 characters")]
         [Display(Name ="Wish List Notes")]
         public string Notes { get; set; }
     }

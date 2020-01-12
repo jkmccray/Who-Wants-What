@@ -28,7 +28,8 @@
     @foreach (var g in Model.Groups)
     {
         var groupUsers = g.GroupUsers.OrderBy(gu => gu.User.LastName);
-    <div class="group-card">
+        var groupWishLists = g.GroupWishLists;
+    <div class="group-card card mb-4">
         @if (groupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User) && gu.Joined))
         {
             <h4 class="card-header group-card-header no-caps">@Html.ActionLink(g.Name.ToString(), "Details", new { id = g.GroupId })</h4>
@@ -37,25 +38,28 @@
         {
             <h4 class="card-header group-card-header no-caps">@g.Name</h4>
         }
-        <div class="p-4">
+        <div class="card-body p-4">
             <h5 class="card-title">Members:</h5>
             <ul class="list-group group-members">
                 @foreach (var u in groupUsers.Where(gu => gu.Joined))
                 {
                     var UserId = u.UserId;
                     var GroupId = g.GroupId;
-                <li class="list-group-item d-flex justify-content-between align-items-center pt-0 pb-0 pl-1">
-                    @if (groupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User) && gu.Joined))
+                <li class="list-group-item d-flex align-items-center pt-0 pb-0 pl-1">
+                    <img class="group-member-icon ml-2" src="~/images/member-icon.png" alt="Member Icon" />
+                    @if (groupUsers.Any(gu => gu.UserId == UserManager.GetUserId(User) && gu.Joined)
+                        && groupWishLists.Any(gwl => gwl.GroupId == GroupId && gwl.WishList.UserId == u.UserId)
+                        && u.UserId != UserManager.GetUserId(User))
                     {
                         <form>
                             <input type="hidden" asp-for="@UserId" />
                             <input type="hidden" asp-for="@GroupId" />
-                            <button class="btn btn-link pt-2 pb-2" asp-action="Index" asp-controller="WishLists">@u.User.FirstName @u.User.LastName</button>
+                            <button class="btn btn-link pt-2 pb-2 pl-3" asp-action="Index" asp-controller="WishLists">@u.User.FirstName @u.User.LastName</button>
                         </form>
                     }
                     else
                     {
-                        <span class="btn default-cursor pt-2 pb-2 text-left">@u.User.FirstName @u.User.LastName</span>
+                        <span class="btn default-cursor pt-2 pb-2 pl-3 text-left">@u.User.FirstName @u.User.LastName</span>
                     }
                 </li>
                 }
@@ -66,12 +70,12 @@
                 <form asp-action="RequestToJoinGroup" asp-controller="Groups">
                     <input label="GroupId" type="hidden" asp-for="@GroupId" />
                     <input label="GroupSearchText" type="hidden" asp-for="GroupSearchText" />
-                    <input type="submit" value="Request to Join" class="btn btn-secondary mt-3" />
+                    <input type="submit" value="Request to Join" class="btn btn-outline-primary mt-3" />
                 </form>
             }
             else if (!groupUsers.FirstOrDefault(gu => gu.UserId == UserManager.GetUserId(User)).Joined)
             {
-                <button disabled class="btn btn-secondary disabled mt-3">Requested to Join</button>
+                <button disabled class="btn btn-outline-primary disabled mt-3" style="cursor: default">Requested to Join</button>
             }
         </div>
     </div>

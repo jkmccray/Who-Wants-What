@@ -103,7 +103,7 @@ namespace WhoWantsWhat.Controllers
                 wishList.UserId = user.Id;
                 _context.Add(wishList);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = wishList.WishListId });
             }
             return View(wishList);
         }
@@ -173,6 +173,8 @@ namespace WhoWantsWhat.Controllers
 
             var wishList = await _context.WishLists
                 .Include(w => w.User)
+                .Include(w => w.WishListItems)
+                .ThenInclude(wli => wli.Item)
                 .FirstOrDefaultAsync(m => m.WishListId == id);
             if (wishList == null)
             {
