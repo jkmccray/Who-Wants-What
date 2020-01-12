@@ -25,12 +25,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Users[0].FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Users[0].LastName)
-                </th>
+                <th>Name</th>
                 <th></th>
             </tr>
         </thead>
@@ -40,10 +35,7 @@
                 var UserId = user.Id;
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => user.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => user.LastName)
+                        @user.FirstName @user.LastName
                     </td>
                     <td>
                         <form asp-action="AddUserToGroup" asp-controller="Groups">
