@@ -1,4 +1,4 @@
-﻿@model WhoWantsWhat.Models.ViewModels.ReportsViewModels.ListTypeViewModel
+﻿@model WhoWantsWhat.Models.ViewModels.HomeViewModels.NotificationsViewModel
 
 
 @{
@@ -6,9 +6,73 @@
 }
 
 
+<div class="d-flex">
+    <div class="col-md-6 col-md-offset-2">
+        <section class="logo-section">
+            <img class="logo-big ml-0" src="~/images/logo.png" alt="Logo" />
+        </section>
+    </div>
 
+    <div>
+        <h3>Notifications</h3>
+        @if (Model.UsersWithBirthdaysThisMonth.Count > 0)
+        {
+            <h5 class="mt-4 mb-3">Group Members with Birthdays This Month</h5>
+            <ul class="list-group">
+                @foreach (var user in Model.UsersWithBirthdaysThisMonth)
+                {
+                    var date = new System.Globalization.DateTimeFormatInfo();
+                    var monthName = date.GetMonthName(user.Birthday.Month);
+                    <li class="list-group-item d-flex align-items-center">
+                        <img class="group-member-icon mr-2" src="~/images/member-icon.png" alt="Member Icon" />
+                        @user.FirstName @user.LastName (@monthName @user.Birthday.Day)
+                    </li>
+                }
+            </ul>
+        }
 
-
-
-
-
+        @if (Model.UsersWithBirthdaysNextMonth.Count > 0)
+        {
+            <h5 class="mt-4 mb-3">Group Members with Birthdays Next Month</h5>
+            <ul class="list-group">
+                @foreach (var user in Model.UsersWithBirthdaysNextMonth)
+                {
+                    var date = new System.Globalization.DateTimeFormatInfo();
+                    var monthName = date.GetMonthName(user.Birthday.Month);
+                    <li class="list-group-item d-flex align-items-center">
+                        <img class="group-member-icon mr-2" src="~/images/member-icon.png" alt="Member Icon" />
+                        @user.FirstName @user.LastName (@monthName @user.Birthday.Day)
+                    </li>
+                }
+            </ul>
+        }
+        @if (Model.UpcomingGiftListsThisMonth.Count > 0)
+        {
+            <h5 class="mt-4 mb-3">Gift Lists for This Month</h5>
+            <ul class="list-group">
+                @foreach (var gl in Model.UpcomingGiftListsThisMonth)
+                {
+                    var glDisplayName = gl.Name + " (Date Needed: " + gl.DateNeeded.ToShortDateString() + ")";
+                    <li class="list-group-item d-flex align-items-center">
+                        <img class="list-icon mr-2" src="~/images/list-icon.png" alt="List Icon" />
+                        @Html.ActionLink(glDisplayName, "Details", "GiftLists", new { id = gl.GiftListId })
+                    </li>
+                }
+            </ul>
+        }
+        @if (Model.UpcomingGiftListsNextMonth.Count > 0)
+        {
+            <h5 class="mt-4 mb-3">Gift Lists for Next Month</h5>
+            <ul class="list-group">
+                @foreach (var gl in Model.UpcomingGiftListsNextMonth)
+                {
+                    var glDisplayName = gl.Name + " (Date Needed: " + gl.DateNeeded.ToShortDateString() + ")";
+                    <li class="list-group-item d-flex align-items-center">
+                        <img class="list-icon mr-2" src="~/images/list-icon.png" alt="List Icon" />
+                        @Html.ActionLink(glDisplayName, "Details", "GiftLists", new { id = gl.GiftListId })
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
