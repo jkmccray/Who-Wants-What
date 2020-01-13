@@ -1,0 +1,62 @@
+﻿@model WhoWantsWhat.Models.ViewModels.ReportsViewModels.ShoppingReportViewModel
+
+@{
+    ViewData["Title"] = "ShoppingReport";
+}
+
+<h1>Shopping Report: @Model.ListType.Label @Model.Year</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            @*<th scope="col">
+                <h4 class="no-caps">@Html.DisplayNameFor(model => model.TotalItems): @Html.DisplayFor(model => model.TotalItems)</h4>
+            </th>
+            <th scope="col">
+                <h4 class="no-caps">@Html.DisplayNameFor(model => model.PercentPurchasedByUser): @Html.DisplayFor(model => model.PercentPurchasedByUser.ToString())</h4>
+            </th>
+            <th scope="col">
+                <h4 class="no-caps">@Html.DisplayNameFor(model => model.PercentPurchasedByOthers): @Html.DisplayFor(model => model.PercentPurchasedByOthers.ToString())</h4>
+            </th>
+            <th scope="col">
+                <h4 class="no-caps">@Html.DisplayNameFor(model => model.PercentLeftToPurchase): @Html.DisplayFor(model => model.PercentLeftToPurchase.ToString())</h4>
+            </th>*@
+        </tr>
+    </thead>
+</table>
+
+<div class="text-center">
+    <canvas id="myChart"></canvas>
+</div>
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/js/mdb.min.js"></script>
+
+<script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+    @{
+         var chartData = Html.Raw(Json.Serialize(Model.Percentages));
+    }
+    var chartDataSpent = JSON.parse('@chartData');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ["Percent Purchased by Me", "Percent Purchased by Others", "Percent Left to Purchase"],
+            datasets:
+            [{
+                data: chartDataSpent,
+                backgroundColor: ["#285157", "#cdabaa", "#c6c6c6"],
+                hoverBackgroundColor: ["#63a6af", "#e8d6d5", "#e0e0e0"]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>

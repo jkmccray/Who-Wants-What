@@ -46,10 +46,9 @@ namespace WhoWantsWhat.Controllers
             var user = await GetCurrentUserAsync();
 
             var giftLists = await _context.GiftLists
-                .Where(gl => gl.DateNeeded.Year == Year)
                 .Include(gl => gl.GiftListItems)
                 .ThenInclude(gli => gli.Item)
-                .Where(gl => gl.CreatorId == user.Id && gl.ListTypeId == ListTypeId)
+                .Where(gl => gl.CreatorId == user.Id && gl.ListTypeId == ListTypeId && gl.DateNeeded.Year == Year)
                 .ToListAsync();
 
             foreach(var gl in giftLists)
@@ -61,11 +60,38 @@ namespace WhoWantsWhat.Controllers
             {
                 ListTypeId = ListTypeId,
                 ListType = await _context.ListTypes.FindAsync(ListTypeId),
+                Year = Year,
                 GiftLists = giftLists,
                 TotalAmountSpent = giftLists.Select(gl => gl.AmountSpent).Sum(),
                 TotalBudget = giftLists.Select(gl => gl.Budget).Sum()
             };
 
+            return View(viewModel);
+        }
+        public async Task<IActionResult> ShoppingReport(int ListTypeId, int Year)
+        {
+            var user = await GetCurrentUserAsync();
+
+            var giftLists = await _context.GiftLists
+                .Include(gl => gl.GiftListItems)
+                .ThenInclude(gli => gli.Item)
+                .Where(gl => gl.CreatorId == user.Id && gl.ListTypeId == ListTypeId && gl.DateNeeded.Year == Year)
+                .ToListAsync();
+
+            var viewModel = new ShoppingReportViewModel
+            {
+                ListTypeId = ListTypeId,
+                ListType = await _context.ListTypes.FindAsync(ListTypeId),
+                Year = Year,
+                GiftLists = giftLists,
+                TotalItems = giftLists.Select(gl => gl.GiftListItems.Count()).Sum(),
+                ItemsPurchasedByUser = giftLists
+                    .Select(gl => gl.GiftListItems.Where(gli => gli.Item.Purchaser == user && gli.Item.Purchased)
+                    .Count()).Sum(),
+                ItemsPurchasedByOthers = giftLists
+                    .Select(gl => gl.GiftListItems.Where(gli => gli.Item.Purchaser != user && gli.Item.Purchased)
+                    .Count()).Sum(),
+            };
             return View(viewModel);
         }
     }
