@@ -52,13 +52,12 @@
             <ul class="list-group">
                 @foreach (var gl in Model.UpcomingGiftListsThisMonth)
                 {
-                    var date = new System.Globalization.DateTimeFormatInfo();
                     var glDisplayName = gl.Name + " (Date Needed: " + gl.DateNeeded.ToShortDateString() + ")";
-            <li class="list-group-item d-flex align-items-center">
-                <img class="list-icon mr-2" src="~/images/list-icon.png" alt="List Icon" />
-                @Html.ActionLink(glDisplayName, "Details", "GiftLists", new { id = gl.GiftListId })
-            </li>
-        }
+                    <li class="list-group-item d-flex align-items-center">
+                        <img class="list-icon mr-2" src="~/images/list-icon.png" alt="List Icon" />
+                        @Html.ActionLink(glDisplayName, "Details", "GiftLists", new { id = gl.GiftListId })
+                    </li>
+                }
             </ul>
         }
         @if (Model.UpcomingGiftListsNextMonth.Count > 0)
@@ -67,10 +66,10 @@
             <ul class="list-group">
                 @foreach (var gl in Model.UpcomingGiftListsNextMonth)
                 {
-                    var date = new System.Globalization.DateTimeFormatInfo();
+                    var glDisplayName = gl.Name + " (Date Needed: " + gl.DateNeeded.ToShortDateString() + ")";
                     <li class="list-group-item d-flex align-items-center">
                         <img class="list-icon mr-2" src="~/images/list-icon.png" alt="List Icon" />
-                        @gl.Name (Date Needed: @gl.DateNeeded.ToShortDateString())
+                        @Html.ActionLink(glDisplayName, "Details", "GiftLists", new { id = gl.GiftListId })
                     </li>
                 }
             </ul>
