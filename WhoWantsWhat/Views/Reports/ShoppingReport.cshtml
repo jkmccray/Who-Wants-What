@@ -6,28 +6,25 @@
 
 <h1>Shopping Report: @Model.ListType.Label @Model.Year</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            @*<th scope="col">
-                <h4 class="no-caps">@Html.DisplayNameFor(model => model.TotalItems): @Html.DisplayFor(model => model.TotalItems)</h4>
-            </th>
-            <th scope="col">
-                <h4 class="no-caps">@Html.DisplayNameFor(model => model.PercentPurchasedByUser): @Html.DisplayFor(model => model.PercentPurchasedByUser.ToString())</h4>
-            </th>
-            <th scope="col">
-                <h4 class="no-caps">@Html.DisplayNameFor(model => model.PercentPurchasedByOthers): @Html.DisplayFor(model => model.PercentPurchasedByOthers.ToString())</h4>
-            </th>
-            <th scope="col">
-                <h4 class="no-caps">@Html.DisplayNameFor(model => model.PercentLeftToPurchase): @Html.DisplayFor(model => model.PercentLeftToPurchase.ToString())</h4>
-            </th>*@
-        </tr>
-    </thead>
-</table>
-
-<div class="text-center">
-    <canvas id="myChart"></canvas>
+<div class="d-flex mt-5">
+    <div class="text-center col-8">
+        <canvas id="myChart"></canvas>
+    </div>
+    <div>
+        <h5>Gift Lists with Items Not Yet Purchased:</h5>
+        <ul class="list-group">
+            @foreach(var gl in Model.GiftLists.Where(gl => gl.GiftListItems.Any(gli => !gli.Item.Purchased)))
+            {
+            <li class="list-group-item">
+                <img class="list-icon ml-2 mr-3 mb-1" src="~/images/list-icon.png" alt="List Icon" />
+                @Html.ActionLink(gl.Name.ToString(), "Details", "GiftLists", new { id = gl.GiftListId })
+            </li>
+            }
+        </ul>
+    </div>
 </div>
+
+
 
 <!-- JQuery -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

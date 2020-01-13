@@ -6,7 +6,8 @@
 
 <h1>Reports</h1>
 
-<h3>Spending Report:</h3>
+
+<h3 class="mt-5">Spending Report:</h3>
 <form asp-action="SpendingReport" asp-controller="Reports" class="report-select-form mt-4">
     <div class="form-group">
         <select asp-for="ListTypeId" class="form-control" asp-items="@Model.ListTypeOptions"></select>
@@ -21,7 +22,7 @@
     </div>
 </form>
 
-<h3>Shopping Report:</h3>
+<h3 class="mt-5">Shopping Report:</h3>
 <form asp-action="ShoppingReport" asp-controller="Reports" class="report-select-form mt-4">
     <div class="form-group">
         <select asp-for="ListTypeId" class="form-control" asp-items="@Model.ListTypeOptions"></select>
