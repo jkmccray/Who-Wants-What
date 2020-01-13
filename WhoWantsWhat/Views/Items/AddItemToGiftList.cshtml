@@ -4,15 +4,14 @@
     ViewData["Title"] = "AddItemToGiftList";
 }
 
-<h1>Select List</h1>
+<h3>Select Gift List</h3>
 
 
-<form asp-action="SaveWishListItemToGiftList">
+<form asp-action="SaveWishListItemToGiftList" class="d-flex mt-4">
     <input type="hidden" asp-for="Item.ItemId" />
     <input type="hidden" asp-for="UserId" />
     <input type="hidden" asp-for="WishListId" />
-    <div class="form-group">
-        <label asp-for="GiftListId" class="control-label">Gift List</label>
+    <div class="form-group mr-2">
         <select asp-for="GiftListId" class="form-control" asp-items="@Model.GiftListOptions"></select>
         <span asp-validation-for="GiftListId" class="text-danger"></span>
     </div>
