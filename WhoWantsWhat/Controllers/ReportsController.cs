@@ -27,18 +27,26 @@ namespace WhoWantsWhat.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var user = await GetCurrentUserAsync();
             var viewModel = new ListTypeViewModel
             {
-                ListTypes = await _context.ListTypes.ToListAsync()
+                ListTypes = await _context.ListTypes.ToListAsync(),
+                Years = await _context.GiftLists
+                    .Where(gl => gl.Creator == user)
+                    .OrderBy(gl => gl.DateNeeded)
+                    .Select(gl => gl.DateNeeded.Year)
+                    .Distinct()
+                    .ToListAsync()
             };
             return View(viewModel);
         }
 
-        public async Task<IActionResult> SpendingReport(int ListTypeId)
+        public async Task<IActionResult> SpendingReport(int ListTypeId, int Year)
         {
             var user = await GetCurrentUserAsync();
 
             var giftLists = await _context.GiftLists
+                .Where(gl => gl.DateNeeded.Year == Year)
                 .Include(gl => gl.GiftListItems)
                 .ThenInclude(gli => gli.Item)
                 .Where(gl => gl.CreatorId == user.Id && gl.ListTypeId == ListTypeId)

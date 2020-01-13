@@ -13,6 +13,10 @@
         <span asp-validation-for="ListTypeId" class="text-danger"></span>
     </div>
     <div class="form-group ml-3">
+        <select asp-for="Year" class="form-control" asp-items="@Model.YearOptions"></select>
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+    <div class="form-group ml-3">
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>
 </form>
