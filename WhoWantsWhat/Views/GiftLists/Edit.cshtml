@@ -16,15 +16,18 @@
                 <input asp-for="GiftList.Name" class="form-control" />
                 <span asp-validation-for="GiftList.Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="GiftList.ReceiverId" class="control-label"></label>
-                <select asp-for="GiftList.ReceiverId" class="form-control" asp-items="@Model.ReceiverOptions"></select>
-                <div class="text-danger mt-2 mb-2">    @TempData["ErrorMessage"] </div>
-            </div>
-            @if (Model.GiftList != null && Model.GiftList.ReceiverId == "0")
+            @if (Model.GiftList.ReceiverId != null)
             {
                 <div class="form-group">
-                    <label asp-for="GiftList.ReceiverName" class="control-label"></label>
+                    <label asp-for="GiftList.ReceiverId" class="control-label">Recipient</label>
+                    <select asp-for="GiftList.ReceiverId" class="form-control" asp-items="@Model.ReceiverOptions"></select>
+                    <div class="text-danger mt-2 mb-2">    @TempData["ErrorMessage"] </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="GiftList.ReceiverName" class="control-label">Recipient Name</label>
                     <input asp-for="GiftList.ReceiverName" class="form-control" />
                     <span asp-validation-for="GiftList.ReceiverName" class="text-danger"></span>
                 </div>
