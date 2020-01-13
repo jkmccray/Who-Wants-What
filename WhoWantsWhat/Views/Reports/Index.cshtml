@@ -21,6 +21,13 @@
         <input type="submit" value="View Report" class="btn btn-primary" />
     </div>
 </form>
+@if (TempData["SpendingErrorMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-danger col-6">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <div class="text-danger mt-2 mb-2">@TempData["SpendingErrorMessage"] </div>
+    </div>
+}
 
 <h3 class="mt-5">Shopping Report:</h3>
 <form asp-action="ShoppingReport" asp-controller="Reports" class="report-select-form mt-4">
@@ -36,3 +43,10 @@
         <input type="submit" value="View Report" class="btn btn-primary" />
     </div>
 </form>
+@if (TempData["ShoppingErrorMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-danger col-6">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <div class="text-danger mt-2 mb-2">@TempData["ShoppingErrorMessage"] </div>
+    </div>
+}

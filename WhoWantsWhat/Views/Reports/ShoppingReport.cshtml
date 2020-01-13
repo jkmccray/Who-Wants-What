@@ -10,18 +10,21 @@
     <div class="text-center col-8">
         <canvas id="myChart"></canvas>
     </div>
-    <div>
-        <h5>Gift Lists with Items Not Yet Purchased:</h5>
-        <ul class="list-group">
-            @foreach(var gl in Model.GiftLists.Where(gl => gl.GiftListItems.Any(gli => !gli.Item.Purchased)))
-            {
-            <li class="list-group-item">
-                <img class="list-icon ml-2 mr-3 mb-1" src="~/images/list-icon.png" alt="List Icon" />
-                @Html.ActionLink(gl.Name.ToString(), "Details", "GiftLists", new { id = gl.GiftListId })
-            </li>
-            }
-        </ul>
-    </div>
+    @if (Model.GiftLists.Where(gl => gl.GiftListItems.Any(gli => !gli.Item.Purchased)).Count() > 0)
+    {
+        <div>
+            <h5>Gift Lists with Items Not Yet Purchased:</h5>
+            <ul class="list-group">
+                @foreach(var gl in Model.GiftLists.Where(gl => gl.GiftListItems.Any(gli => !gli.Item.Purchased)))
+                {
+                <li class="list-group-item">
+                    <img class="list-icon ml-2 mr-3 mb-1" src="~/images/list-icon.png" alt="List Icon" />
+                    @Html.ActionLink(gl.Name.ToString(), "Details", "GiftLists", new { id = gl.GiftListId })
+                </li>
+                }
+            </ul>
+        </div>
+    }
 </div>
 
 

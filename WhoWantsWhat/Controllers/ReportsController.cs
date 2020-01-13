@@ -65,7 +65,16 @@ namespace WhoWantsWhat.Controllers
                 TotalAmountSpent = giftLists.Select(gl => gl.AmountSpent).Sum(),
                 TotalBudget = giftLists.Select(gl => gl.Budget).Sum()
             };
-
+            if (viewModel.ListTypeId == 0 || viewModel.Year == 0)
+            {
+                TempData["SpendingErrorMessage"] = "Please select a category and year.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (viewModel.GiftLists.Count() == 0)
+            {
+                TempData["SpendingErrorMessage"] = "No report for the selected category and year. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
             return View(viewModel);
         }
         public async Task<IActionResult> ShoppingReport(int ListTypeId, int Year)
@@ -92,6 +101,16 @@ namespace WhoWantsWhat.Controllers
                     .Select(gl => gl.GiftListItems.Where(gli => gli.Item.Purchaser != user && gli.Item.Purchased)
                     .Count()).Sum(),
             };
+            if (viewModel.ListTypeId == 0 || viewModel.Year == 0)
+            {
+                TempData["ShoppingErrorMessage"] = "Please select a category and year.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (viewModel.TotalItems == 0)
+            {
+                TempData["ShoppingErrorMessage"] = "No report for the selected category and year. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
             return View(viewModel);
         }
     }
