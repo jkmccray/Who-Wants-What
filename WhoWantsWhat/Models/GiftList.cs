@@ -28,16 +28,16 @@ namespace WhoWantsWhat.Models
         [Display(Name="Date Needed")]
         [DataType(DataType.Date)]
         public DateTime DateNeeded { get; set; }
-        [DisplayFormat(DataFormatString = "{0:C}")]
+        [DisplayFormat(DataFormatString = "{0:C0}")]
         public int Budget { get; set; }
         public ICollection<GiftListItem> GiftListItems { get; set; }
         [NotMapped]
         [Display(Name="Amount Spent")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
+        [DisplayFormat(DataFormatString = "{0:C0}")]
         public double AmountSpent { get; set; }
         [NotMapped]
         [Display(Name="Amount Left")]
-        [DisplayFormat(DataFormatString = "{0:C}")]
+        [DisplayFormat(DataFormatString = "{0:C0}")]
         public double Difference { get; set; }
     }
 }
