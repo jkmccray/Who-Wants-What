@@ -10,6 +10,7 @@ namespace WhoWantsWhat.Models.ViewModels.ReportsViewModels
     {
         public int ListTypeId { get; set; }
         public ListType ListType { get; set; }
+        public int Year { get; set; }
         public List<GiftList> GiftLists { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}")]

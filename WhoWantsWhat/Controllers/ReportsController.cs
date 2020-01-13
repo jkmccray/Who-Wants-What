@@ -27,21 +27,28 @@ namespace WhoWantsWhat.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var user = await GetCurrentUserAsync();
             var viewModel = new ListTypeViewModel
             {
-                ListTypes = await _context.ListTypes.ToListAsync()
+                ListTypes = await _context.ListTypes.ToListAsync(),
+                Years = await _context.GiftLists
+                    .Where(gl => gl.Creator == user)
+                    .OrderBy(gl => gl.DateNeeded)
+                    .Select(gl => gl.DateNeeded.Year)
+                    .Distinct()
+                    .ToListAsync()
             };
             return View(viewModel);
         }
 
-        public async Task<IActionResult> SpendingReport(int ListTypeId)
+        public async Task<IActionResult> SpendingReport(int ListTypeId, int Year)
         {
             var user = await GetCurrentUserAsync();
 
             var giftLists = await _context.GiftLists
                 .Include(gl => gl.GiftListItems)
                 .ThenInclude(gli => gli.Item)
-                .Where(gl => gl.CreatorId == user.Id && gl.ListTypeId == ListTypeId)
+                .Where(gl => gl.CreatorId == user.Id && gl.ListTypeId == ListTypeId && gl.DateNeeded.Year == Year)
                 .ToListAsync();
 
             foreach(var gl in giftLists)
@@ -53,11 +60,57 @@ namespace WhoWantsWhat.Controllers
             {
                 ListTypeId = ListTypeId,
                 ListType = await _context.ListTypes.FindAsync(ListTypeId),
+                Year = Year,
                 GiftLists = giftLists,
                 TotalAmountSpent = giftLists.Select(gl => gl.AmountSpent).Sum(),
                 TotalBudget = giftLists.Select(gl => gl.Budget).Sum()
             };
+            if (viewModel.ListTypeId == 0 || viewModel.Year == 0)
+            {
+                TempData["SpendingErrorMessage"] = "Please select a category and year.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (viewModel.GiftLists.Count() == 0)
+            {
+                TempData["SpendingErrorMessage"] = "No report for the selected category and year. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(viewModel);
+        }
+        public async Task<IActionResult> ShoppingReport(int ListTypeId, int Year)
+        {
+            var user = await GetCurrentUserAsync();
 
+            var giftLists = await _context.GiftLists
+                .Include(gl => gl.GiftListItems)
+                .ThenInclude(gli => gli.Item)
+                .Where(gl => gl.CreatorId == user.Id && gl.ListTypeId == ListTypeId && gl.DateNeeded.Year == Year)
+                .ToListAsync();
+
+            var viewModel = new ShoppingReportViewModel
+            {
+                ListTypeId = ListTypeId,
+                ListType = await _context.ListTypes.FindAsync(ListTypeId),
+                Year = Year,
+                GiftLists = giftLists,
+                TotalItems = giftLists.Select(gl => gl.GiftListItems.Count()).Sum(),
+                ItemsPurchasedByUser = giftLists
+                    .Select(gl => gl.GiftListItems.Where(gli => gli.Item.Purchaser == user && gli.Item.Purchased)
+                    .Count()).Sum(),
+                ItemsPurchasedByOthers = giftLists
+                    .Select(gl => gl.GiftListItems.Where(gli => gli.Item.Purchaser != user && gli.Item.Purchased)
+                    .Count()).Sum(),
+            };
+            if (viewModel.ListTypeId == 0 || viewModel.Year == 0)
+            {
+                TempData["ShoppingErrorMessage"] = "Please select a category and year.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (viewModel.TotalItems == 0)
+            {
+                TempData["ShoppingErrorMessage"] = "No report for the selected category and year. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
             return View(viewModel);
         }
     }

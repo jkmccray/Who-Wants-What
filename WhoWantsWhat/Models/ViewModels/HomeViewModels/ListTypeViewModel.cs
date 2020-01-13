@@ -28,5 +28,25 @@ namespace WhoWantsWhat.Models.ViewModels.ReportsViewModels
                 return selectItems;
             }
         }
+        public int Year { get; set; }
+        public List<int> Years { get; set; } = new List<int>();
+        public List<SelectListItem> YearOptions
+        {
+            get
+            {
+                if (Years == null) return null;
+
+                List<SelectListItem> selectItems = Years
+                    .Select(y => new SelectListItem(y.ToString(), y.ToString()))
+                    .ToList();
+                selectItems.Insert(0, new SelectListItem
+                {
+                    Text = "Choose year...",
+                    Value = ""
+                });
+
+                return selectItems;
+            }
+        }
     }
 }

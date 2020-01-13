@@ -1,0 +1,62 @@
+﻿@model WhoWantsWhat.Models.ViewModels.ReportsViewModels.ShoppingReportViewModel
+
+@{
+    ViewData["Title"] = "ShoppingReport";
+}
+
+<h1>Shopping Report: @Model.ListType.Label @Model.Year</h1>
+
+<div class="d-flex mt-5">
+    <div class="text-center col-8">
+        <canvas id="myChart"></canvas>
+    </div>
+    @if (Model.GiftLists.Where(gl => gl.GiftListItems.Any(gli => !gli.Item.Purchased)).Count() > 0)
+    {
+        <div>
+            <h5>Gift Lists with Items Not Yet Purchased:</h5>
+            <ul class="list-group">
+                @foreach(var gl in Model.GiftLists.Where(gl => gl.GiftListItems.Any(gli => !gli.Item.Purchased)))
+                {
+                <li class="list-group-item">
+                    <img class="list-icon ml-2 mr-3 mb-1" src="~/images/list-icon.png" alt="List Icon" />
+                    @Html.ActionLink(gl.Name.ToString(), "Details", "GiftLists", new { id = gl.GiftListId })
+                </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/js/mdb.min.js"></script>
+
+<script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+    @{
+         var chartData = Html.Raw(Json.Serialize(Model.Percentages));
+    }
+    var chartDataSpent = JSON.parse('@chartData');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ["Percent Purchased by Me", "Percent Purchased by Others", "Percent Left to Purchase"],
+            datasets:
+            [{
+                data: chartDataSpent,
+                backgroundColor: ["#285157", "#cdabaa", "#c6c6c6"],
+                hoverBackgroundColor: ["#63a6af", "#e8d6d5", "#e0e0e0"]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
