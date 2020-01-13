@@ -6,9 +6,8 @@
 
 <h1 class="no-caps mt-4">@Model.Group.Name</h1>
 
-<h3 class="no-caps mt-4 mb-4">Are you sure you want to leave this group?</h3class="no-caps>
-<div>
-    
+<h3 class="no-caps mt-4 mb-4">Are you sure you want to leave this group?</h3>
+<div class="mt-3">  
     <form asp-action="LeaveGroupConfirmed">
         <input type="hidden" asp-for="GroupId" />
         <input type="submit" value="Yes" class="btn btn-primary" /> 
